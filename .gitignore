@@ -1,0 +1,11 @@
+.cache
+.coverage
+.DS_Store
+/radio_community/settings/local.py
+htmlcov/*
+*.pyc
+__pycache__
+pytestdebug.log
+staticfiles
+venv
+.idea
