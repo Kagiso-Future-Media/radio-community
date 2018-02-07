@@ -1,1 +1,1 @@
-web: gunicorn urf.wsgi --log-file -
+web: gunicorn radio_community.wsgi --log-file -
