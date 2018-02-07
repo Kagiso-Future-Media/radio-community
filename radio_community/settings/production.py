@@ -10,6 +10,8 @@ CACHALOT_ENABLED = True
 DATABASES['default'] = dj_database_url.config()
 
 INSTALLED_APPS = INSTALLED_APPS + (
+    'djangosecure',
+    'gunicorn',
     'raven.contrib.django.raven_compat',
 )
 
