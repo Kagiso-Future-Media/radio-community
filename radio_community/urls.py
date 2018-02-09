@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf import settings
 from django.conf.urls import include, url
+from django.conf.urls.static import static
 from django.contrib import admin
 
 urlpatterns = [
@@ -22,3 +23,5 @@ urlpatterns = [
     url(r'^', include("reddit.urls")),
     url(r'^', include("users.urls")),
 ]
+
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
