@@ -1,6 +1,5 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse, HttpResponseBadRequest, Http404, \
     HttpResponseForbidden
@@ -10,7 +9,7 @@ from django.template.defaulttags import register
 from reddit.forms import SubmissionForm
 from reddit.models import Submission, Comment, Vote
 from reddit.utils.helpers import post_only
-from users.models import RedditUser
+from kagiso_auth.models import KagisoUser
 
 
 @register.filter
@@ -52,7 +51,7 @@ def frontpage(request):
                 vote = Vote.objects.get(
                     vote_object_type=submission.get_content_type(),
                     vote_object_id=submission.id,
-                    user=RedditUser.objects.get(user=request.user))
+                    user=KagisoUser.objects.get(id=request.user.id))
                 submission_votes[submission.id] = vote.value
             except Vote.DoesNotExist:
                 pass
@@ -79,8 +78,8 @@ def comments(request, thread_id=None):
 
     if request.user.is_authenticated:
         try:
-            reddit_user = RedditUser.objects.get(user=request.user)
-        except RedditUser.DoesNotExist:
+            reddit_user = KagisoUser.objects.get(id=request.user.id)
+        except KagisoUser.DoesNotExist:
             reddit_user = None
     else:
         reddit_user = None
@@ -100,7 +99,7 @@ def comments(request, thread_id=None):
             pass
 
         try:
-            user_thread_votes = Vote.objects.filter(user=reddit_user,
+            user_thread_votes = Vote.objects.filter(id=reddit_user.id,
                                                     submission=this_submission)
 
             for vote in user_thread_votes:
@@ -131,7 +130,7 @@ def post_comment(request):
 
     if not raw_comment:
         return JsonResponse({'msg': "You have to write something."})
-    author = RedditUser.objects.get(user=request.user)
+    author = KagisoUser.objects.get(id=request.user.id)
     parent_object = None
     try:  # try and get comment or submission we're voting on
         if parent_type == 'comment':
@@ -169,7 +168,7 @@ def vote(request):
     if not request.user.is_authenticated:
         return HttpResponseForbidden()
     else:
-        user = RedditUser.objects.get(user=request.user)
+        user = KagisoUser.objects.get(id=request.user.id)
 
     try:  # If the vote value isn't an integer that's equal to -1 or 1
         # the request is bad and we can not continue.
@@ -243,14 +242,13 @@ def submit(request):
     submission_form = SubmissionForm()
 
     if request.method == 'POST':
-        submission_form = SubmissionForm(request.POST)
+        submission_form = SubmissionForm(request.POST, request.FILES)
         if submission_form.is_valid():
             submission = submission_form.save(commit=False)
             submission.generate_html()
-            user = User.objects.get(username=request.user)
-            redditUser = RedditUser.objects.get(user=user)
-            submission.author = redditUser
-            submission.author_name = user.username
+            reddit_user = KagisoUser.objects.get(id=request.user.id)
+            submission.author = reddit_user
+            submission.author_name = '{} {}'.format(reddit_user.first_name, reddit_user.last_name)
             submission.save()
             messages.success(request, 'Submission created')
             return redirect('/comments/{}'.format(submission.id))

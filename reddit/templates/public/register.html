@@ -20,6 +20,6 @@
 
 
         <button class="btn btn-lg btn-primary btn-block" type="submit" {% if user.is_authenticated %}disabled{% endif %}>Sign up</button>
-        <h5>Already have an account? <a href="{% url 'login' %}">Login</a></h5>
+        <h5>Already have an account? <a href="{% url 'sign_in' %}">Login</a></h5>
     </form>
 {% endblock %}

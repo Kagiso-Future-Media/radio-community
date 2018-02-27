@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import os
 from os.path import abspath, dirname, join
 
+from boto.s3.connection import OrdinaryCallingFormat
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -38,12 +41,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
 
-    'mptt',
-    'users',
     'reddit',
-    'comments',
-    'submissions',
+    'storages',
+    'mptt',
+    'kagiso_auth',
+    's3direct',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -111,6 +115,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+AUTHENTICATION_BACKENDS = (
+    'kagiso_auth.backends.KagisoBackend',
+)
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
@@ -125,9 +133,27 @@ USE_L10N = True
 USE_TZ = True
 
 
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+# AWS S3 configuration
+AWS_S3_SECURE_URLS = False
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_CALLING_FORMAT = OrdinaryCallingFormat()
+
+S3DIRECT_DESTINATIONS = {
+    's3_dest': {
+        'key': 'uploads/images',
+        'allowed': ['image/jpeg', 'image/png', 'image/gif'],  # Default allow all mime types
+        # 'content_length_range': (5000, 8000),  # Default allow any size
+    }
+}
+
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+
+
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
@@ -139,4 +165,17 @@ MEDIA_URL = '/media/'
 # Location of root django.contrib.admin URL,
 ADMIN_URL = r'^admin/'
 
-LOGIN_URL = '/login/'
+# LOGIN_URL = '/login/'
+
+# LOGIN URL SETTINGS
+LOGIN_URL = '/sign_in/'
+# LOGIN_REDIRECT_URL = '/voting/'
+
+AUTH_USER_MODEL = 'kagiso_auth.KagisoUser'
+
+APP_NAME = 'RadioCommunity'
+AUTH_FROM_EMAIL = 'noreply@liveamp.tv'
+SIGN_UP_EMAIL_TEMPLATE = 'liveamp-account-confirmation'
+PASSWORD_RESET_EMAIL_TEMPLATE = 'liveamp-password-reset'
+AUTHOMATIC_CONFIG = {}
+

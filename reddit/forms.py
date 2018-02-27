@@ -1,9 +1,8 @@
 from django import forms
-from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 
 from reddit.models import Submission
-from users.models import RedditUser
+from kagiso_auth.models import KagisoUser
 
 
 class UserForm(forms.ModelForm):
@@ -29,7 +28,7 @@ class UserForm(forms.ModelForm):
         required=True)
 
     class Meta:
-        model = User
+        model = KagisoUser
         fields = ('username', 'password')
 
 
@@ -93,7 +92,7 @@ class ProfileForm(forms.ModelForm):
     )
 
     class Meta:
-        model = RedditUser
+        model = KagisoUser
         fields = ('first_name', 'last_name', 'email',
                   'display_picture', 'about_text',
                   'homepage', 'github', 'twitter')
@@ -110,6 +109,8 @@ class SubmissionForm(forms.ModelForm):
                'placeholder': "(Optional) http:///www.example.com"}),
         required=False)
 
+    image = forms.ImageField(required=False)
+
     text = forms.CharField(widget=forms.Textarea(
         attrs={
             'class': "form-control",
@@ -120,4 +121,4 @@ class SubmissionForm(forms.ModelForm):
 
     class Meta:
         model = Submission
-        fields = ('title', 'url', 'text')
+        fields = ('title', 'url', 'image', 'text')

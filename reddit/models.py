@@ -1,18 +1,41 @@
+import boto3
 import mistune
-from django.contrib.auth.models import User
+import os
+
+from PIL import Image
+from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils import timezone
 from mptt.models import MPTTModel, TreeForeignKey
 from radio_community.utils.model_utils import ContentTypeAware, MttpContentTypeAware
 
+from s3direct.fields import S3DirectField
+
+
+s3_resource = boto3.resource(
+    's3',
+    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+)
+
 
 class Submission(ContentTypeAware):
-    author_name = models.CharField(null=False, max_length=12)
-    author = models.ForeignKey('users.RedditUser', on_delete=models.CASCADE)
+    author_name = models.CharField(null=False, max_length=50)
+    author = models.ForeignKey('kagiso_auth.KagisoUser', on_delete=models.CASCADE, related_name='+')
     title = models.CharField(max_length=250)
     url = models.URLField(null=True, blank=True)
+    # image = S3DirectField(dest='s3_dest', blank=True)
+    image = models.ImageField(
+        upload_to='images/radio_com/%Y/%m/%d/',
+        null=True,
+        blank=True
+        # validators=[validate_image]
+    )
     text = models.TextField(max_length=5000, blank=True)
     text_html = models.TextField(blank=True)
     ups = models.IntegerField(default=0)
@@ -42,8 +65,8 @@ class Submission(ContentTypeAware):
 
 
 class Comment(MttpContentTypeAware):
-    author_name = models.CharField(null=False, max_length=12)
-    author = models.ForeignKey('users.RedditUser', on_delete=models.CASCADE)
+    author_name = models.CharField(null=False, max_length=50)
+    author = models.ForeignKey('kagiso_auth.KagisoUser', on_delete=models.CASCADE, related_name='+')
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
     parent = TreeForeignKey(
         'self',
@@ -59,6 +82,13 @@ class Comment(MttpContentTypeAware):
     score = models.IntegerField(default=0)
     raw_comment = models.TextField(blank=True)
     html_comment = models.TextField(blank=True)
+    # image = S3DirectField(dest='s3_dest', blank=True)
+    image = models.ImageField(
+        upload_to='images/radio_com/%Y/%m/%d/',
+        null=True,
+        blank=True
+        # validators=[validate_image]
+    )
 
     class MPTTMeta:
         order_insertion_by = ['-score']
@@ -82,7 +112,7 @@ class Comment(MttpContentTypeAware):
         html_comment = mistune.markdown(raw_comment)
         # todo: any exceptions possible?
         comment = cls(author=author,
-                      author_name=author.user.username,
+                      author_name=author.username,
                       raw_comment=raw_comment,
                       html_comment=html_comment)
 
@@ -105,7 +135,7 @@ class Comment(MttpContentTypeAware):
 
 
 class Vote(models.Model):
-    user = models.ForeignKey('users.RedditUser', on_delete=models.CASCADE)
+    user = models.ForeignKey('kagiso_auth.KagisoUser', on_delete=models.CASCADE, related_name='+')
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
     vote_object_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     vote_object_id = models.PositiveIntegerField()
@@ -210,3 +240,108 @@ class Vote(models.Model):
         self.vote_object.save()
         self.vote_object.author.save()
         return vote_diff
+
+
+def validate_image(field_file_obj):
+    file_size = field_file_obj.size
+    megabyte_limit = 10.0
+    if file_size > megabyte_limit * 1024 * 1024:
+        raise ValidationError(
+            'Max file size is {0}MB'.format(megabyte_limit)
+        )
+    field_file_obj.file.seek(0)
+    if field_file_obj.content_type not in ('image/png', 'image/jpeg', 'image/gif'):
+        raise ValidationError(
+            'Image is not valid. Please upload a JPEG, PNG or GIF image.'
+        )
+
+
+def create_file_url(instance):
+    if not instance:
+        s3_compress = 'compressed'
+        s3_domain = 's3.amazonaws.com'
+        s3_key = instance.file.file.obj.key
+        s3_bucket_name = instance.file.file.obj.bucket_name
+        s3_full_file_url = 'https://{0}.{1}/{2}/{3}'.format(
+            s3_bucket_name, s3_domain, s3_compress, s3_key
+        )
+        instance.url = s3_full_file_url
+        instance.save()
+
+
+def compress_image_from_post_api(instance):
+    url = instance.url
+    file = instance.file
+    print('FILE: ', instance.file)
+    print('FILE URL: ', instance.url)
+    original_image = 'original_image.jpg'
+    compressed_image = 'compressed_image.jpg'
+
+    if 'compressed' in str(url):
+        return None, None, None
+
+    if url and not file:
+        picture_key = str(url).split('images')
+        key = 'images{0}'.format(picture_key[1])
+        s3_resource.Bucket(settings.AWS_STORAGE_BUCKET_NAME).download_file(
+            key, original_image
+        )
+    try:
+        image = Image.open(original_image)
+        image.save(compressed_image, format='JPEG', qaulity=80)
+        image.close()
+    except FileNotFoundError:
+        pass
+
+    if not key:
+        return None, None, None
+
+    compressed_key = 'compressed/{0}'.format(key)
+    try:
+        local_file_name = compressed_image
+        my_bucket = settings.AWS_STORAGE_BUCKET_NAME
+        data = open(local_file_name, 'r+b')
+        data.seek(0)
+        s3_resource_bucket = s3_resource.Bucket(my_bucket)
+        s3_resource_bucket.put_object(
+            Key=compressed_key,
+            Body=data,
+            ContentType='image/jpeg'
+        )
+        data.close()
+    except FileNotFoundError:
+        pass
+
+    s3_full_file_url = '{0}{1}'.format(picture_key[0], compressed_key)
+    return s3_full_file_url, original_image, compressed_image
+
+
+# @receiver(post_save, sender=Comment)
+# def update_picture_file_url(sender, instance, **kwargs):
+#     create_file_url(instance.image)
+#     instance.up_load_to_s3_after_compress()
+#
+#     if not instance.url:
+#         return
+#
+#     compress_url, original_image, compressed_image = compress_image_from_post_api(instance)  # noqa
+#
+#     if compress_url:
+#         if 'compressed' in str(instance.url):
+#             return
+#         instance.url = compress_url
+#         instance.save()
+#
+#     if original_image:
+#         try:
+#             os.remove(original_image) if os.path.exists(
+#                 original_image) else None  # noqa
+#         except FileNotFoundError:
+#             pass
+#
+#     if compressed_image:
+#         try:
+#             os.remove(compressed_image) if os.path.exists(
+#                 compressed_image) else None  # noqa
+#         except FileNotFoundError:
+#             pass

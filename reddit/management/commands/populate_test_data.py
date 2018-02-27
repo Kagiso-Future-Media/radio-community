@@ -7,6 +7,7 @@ from django.core.management.base import BaseCommand
 from reddit.models import Comment
 from reddit.models import Submission
 from users.models import RedditUser
+from kagiso_auth.models import KagisoUser
 
 
 class Command(BaseCommand):
@@ -71,13 +72,13 @@ class Command(BaseCommand):
     def get_or_create_author(self, username):
         try:
             user = User.objects.get(username=username)
-            author = RedditUser.objects.get(user=user)
+            author = KagisoUser.objects.get(user=user)
         except (User.DoesNotExist, RedditUser.DoesNotExist):
             print("Creating user {}".format(username))
             new_author = User(username=username)
             new_author.set_password(username)
             new_author.save()
-            author = RedditUser(user=new_author)
+            author = KagisoUser(user=new_author)
             author.save()
         return author
 

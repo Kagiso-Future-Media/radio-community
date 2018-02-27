@@ -49,7 +49,7 @@ class TestSubmissionRequests(TestCase):
     def test_logged_out(self):
         r = self.c.get(reverse('submit'))
         self.assertRedirects(r, "{}?next={}".format(
-            reverse('login'), reverse('submit')
+            reverse('sign_in'), reverse('submit')
         ))
 
     def test_logged_in_GET(self):
