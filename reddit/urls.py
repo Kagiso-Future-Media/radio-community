@@ -24,6 +24,10 @@ urlpatterns = [
         views.delete_submission,
         name='delete_submission_comments'
         ),
+    url(r'^comments/comments/node/(?P<object_id>[0-9]+)/delete/$',
+        views.delete_comment,
+        name='delete_comment'
+        ),
     url(r'^submit/$', views.submit, name="submit"),
     url(r'^submit/(?P<object_id>[0-9]+)/delete/$',
         views.delete_submission,

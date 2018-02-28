@@ -263,3 +263,12 @@ def delete_submission(request, object_id):
         request, 'Submission Deleted with ID : {0}'.format(object_id)
     )
     return redirect('/')
+
+
+def delete_comment(request, object_id):
+    node = get_object_or_404(Comment, pk=object_id)
+    node.delete()
+    messages.success(
+        request, 'Comment Deleted with ID : {0}'.format(object_id)
+    )
+    return redirect('/')
