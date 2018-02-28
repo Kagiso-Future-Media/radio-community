@@ -22,6 +22,10 @@
             <div class="reply-container">
                 <a class="thread-title" href="{{ submission.linked_url }}">{{ submission.title }}</a>
                 <br>
+                <a href="submit/{{ submission.id }}/delete/">
+                    DELETE
+                </a>
+                <br>
                 <h6 class="thread-info">submitted {{ submission.timestamp|naturaltime }} by <a
                         href="/user/{{ submission.author_name }}">{{ submission.author_name }}</a></h6>
                 {{ submission.text_html|safe }}
