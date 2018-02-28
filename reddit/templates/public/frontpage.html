@@ -28,7 +28,12 @@
                     <h6 class="thread-info">submitted {{ submission.timestamp|naturaltime }} by <a
                             href="/user/{{ submission.author_name }}">{{ submission.author_name }}</a></h6>
                     <ul class="buttons">
-                        <li><a href="{{ submission.comments_url }}">{{ submission.comment_count }} comments</a></li>
+                        <li>
+                            <a href="{{ submission.comments_url }}">{{ submission.comment_count }} comments</a> <br>
+                            <a href="submit/{{ submission.id }}/delete/">
+                                DELETE
+                            </a>
+                        </li>
                     </ul>
                 </td>
             </tr>
