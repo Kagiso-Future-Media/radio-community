@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
     <form class="form-signin" method="post">
         {% csrf_token %}
         {{ form.as_p }}
