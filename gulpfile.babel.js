@@ -5,9 +5,10 @@ const cssnano = require('gulp-cssnano');
 const sourcemaps = require('gulp-sourcemaps');
 const autoprefixer = require('gulp-autoprefixer');
 const scsslint = require('gulp-scss-lint');
+const rename = require('gulp-rename');
 
 //-- path config
-const stylesPath    = 'styles/**/*.scss';
+const stylesPath    = 'reddit/static/styles/**/*.scss';
 
 // Sass Workflow
 gulp.task('workflow', () => {
@@ -24,15 +25,17 @@ gulp.task('workflow', () => {
 		.pipe(rename({
 			suffix: '.min'
 		}))
-	.pipe(gulp.dest('./styles/'))
+	.pipe(gulp.dest('./reddit/static/styles/'))
   .pipe(bs.stream());
 });
 
 //-- Static server
 gulp.task('dev', () => {
   bs.init({
-    server: {
-      baseDir: "./"
+    proxy: "radio.127.0.0.1.xip.io:8000",
+    port: 3020,
+    ui: {
+      port: 3011
     },
     ghostMode: false
   });
