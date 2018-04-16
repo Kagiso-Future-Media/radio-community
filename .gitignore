@@ -9,3 +9,5 @@ pytestdebug.log
 staticfiles
 venv
 .idea
+node_modules/
+.vscode
