@@ -19,11 +19,11 @@
         </div>
       </td>
       <td class="info-container">
-        <!-- {% if submission.image %}
+        {% if submission.image %}
           <img src="{{ submission.image }}" alt="{{ submission.title }}">
         {% else %}
           <img src="https://dummyimage.com/40x40/000/fff" alt="placeholder image">
-        {% endif %} -->
+        {% endif %}
         <a class="thread-title" href="{{ submission.linked_url }}" target="_blank">{{ submission.title }}</a>
         <br>
         <h6 class="thread-info">
