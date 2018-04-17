@@ -26,8 +26,6 @@
         const $socialFacebookItem = $('.facebook').find('img');
         const $socialGoogleItem = $('.google-plus').find('img');
 
-        console.log($socialGoogleItem);
-
         $socialFacebookItem.attr('src', '../static/img/icons/facebook_icon.png');
         $socialGoogleItem.attr('src', '../static/img/icons/google_plus_icon.png');
       },
