@@ -1,8 +1,79 @@
+{% load staticfiles %}
+
+<!-- OLD Footer!
 <div id="footer">
-    <div class="container">
-        <p class="text-muted">Reddit clone written in django by <a href="http://nikolak.com">Nikola Kovacevic</a>
-            available for free on <i class="fa fa-github"> <a href="https://github.com/Nikola-K/django_reddit">GitHub</a></i>
-            under <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License Version 2.0</a>
-        </p>
+  <div class="container">
+    <p class="text-muted">Reddit clone written in django by <a href="http://nikolak.com">Nikola Kovacevic</a>
+      available for free on <i class="fa fa-github"> <a href="https://github.com/Nikola-K/django_reddit">GitHub</a></i>
+      under <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License Version 2.0</a>
+    </p>
+  </div>
+</div> -->
+
+<footer class="footer clearfix" role="contentinfo">
+  <div class="container">
+    <div class="footer--lines"></div>
+      <div class="footer--column">
+        <div class="footer--column-title">News</div>
+        <ul class="footer--column-list">
+          <li><a href="https://www.jacarandafm.com/news/news/" target="_blank">News</a></li>
+          <li><a href="https://www.jacarandafm.com/news/sport/" target="_blank">Sport</a></li>
+          <li><a href="https://www.jacarandafm.com/news/entertainment/" target="_blank">Entertainment</a></li>
+          <li><a href="https://www.jacarandafm.com/news/traffic/" target="_blank">Traffic</a></li>
+        </ul>
+      </div>
+      <div class="footer--column">
+        <div class="footer--column-title">Music</div>
+        <ul class="footer--column-list">
+          <li><a href="https://www.jacarandafm.com/top-20/" target="_blank">The Chamberlains Top 20</a></li>
+          <li><a href="https://www.jacarandafm.com/sa-top-20/" target="_blank">SA TOP 20</a></li>
+          <li><a href="https://www.jacarandafm.com/moremusicyoulove/" target="_blank">#MoreMusicYouLove</a></li>
+        </ul>
+      </div>
+      <div class="footer--column">
+        <div class="footer--column-title">Information</div>
+        <ul class="footer--column-list">
+          <li><a href="http://jacarandafm.jb.skillsmapafrica.com/" target="_blank">Careers</a></li>
+          <li><a href="https://www.jacarandafm.com/terms-of-use/" target="_blank">Terms of Use</a></li>
+          <li><a href="https://www.jacarandafm.com/privacy-policy/" target="_blank">Privacy Policy</a></li>
+          <li><a href="https://www.jacarandafm.com/podcasts/" target="_blank">Audio on Demand</a></li>
+          <li><a href="https://www.jacarandafm.com/jacaranda-app/" target="_blank">Jacaranda App</a></li>
+          <li><a href="https://www.jacarandafm.com/forgot_password/" target="_blank">Forgot Password</a></li>
+          <li><a href="https://www.jacarandafm.com/update_details/" target="_blank">Update Details</a></li>
+        </ul>
+      </div>
+    <div class="footer--column">
+      <div class="buttons-app-store">
+        <a href="https://itunes.apple.com/za/app/jacaranda-fm/id1067298831?mt=8" target="_blank">
+          <img src="{% static 'img/button_app_store.png' %}" alt="">
+        </a>
+        <a href="https://play.google.com/store/apps/details?id=com.kagiso.jacarandafm&hl=en" target="_blank">
+          <img src="{% static 'img/button_google_play.png' %}" alt="">
+        </a>
+      </div>
+      <h6>Connect with us</h6>
+      <div class="icons-social">
+        <a href="https://www.facebook.com/Jacaranda942" target="_blank">
+          <img src="{% static 'img/icons/icon_facebook.svg' %}" alt="">
+        </a>
+        <a href="https://twitter.com/jacarandafm" target="_blank">
+          <img src="{% static 'img/icons/icon_twitter.svg' %}" alt="">
+        </a>
+        <a href="https://www.instagram.com/jacarandafm/" target="_blank">
+          <img src="{% static 'img/icons/icon_instagram.svg' %}" alt="">
+        </a>
+        <a href="https://www.jacarandafm.com/contact-us/" target="_blank">
+          <img src="{% static 'img/icons/icon_mail.svg' %}" alt="">
+        </a>
+      </div>
+      <div class="footer--logos">
+        <a href="http://www.iabsa.net/" target="_blank">
+          <img src="{% static 'img/logo_iab.png' %}" alt="IAB logo">
+        </a>
+        <a href="http://www.kagisomedia.co.za/" target="_blank">
+          <img src="{% static 'img/logo_kagiso_media.png' %}" alt="Kagiso Media logo">
+        </a>
+      </div>
     </div>
-</div>
+  </div>
+</footer>

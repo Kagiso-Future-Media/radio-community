@@ -17,10 +17,28 @@
         rc.common.welcomeSetup();
         rc.common.cancelPostSubmissionSetup();
         rc.common.socialSignInSetup();
+        rc.common.setupFooter();
       },
       // Create your function here
       welcomeSetup: function () {
         console.log('%cWelcome To Community Radio!', 'color: red; font-size: 12px; font-weight: bold');
+      },
+      setupFooter: function () {
+        if(window.innerWidth < 992) {
+          $('.footer--column').each(function() {
+            var $this = $(this);
+
+            $('.footer--column-title', $this).on('click', function(e) {
+              e.preventDefault();
+
+              $(this).toggleClass('is-expanded');
+
+              var $footer_column_list = $('.footer--column-list', $this);
+              $footer_column_list.slideToggle();
+              return false;
+            });
+          });
+        }
       },
       socialSignInSetup: function () {
         const $socialFacebookItem = $('.facebook').find('img');

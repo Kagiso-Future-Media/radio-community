@@ -33,6 +33,11 @@
 .jac-navigation {
   background-color: #5c006a;
   margin: 0 0 50px;
+  display: none;
+
+  @media(min-width: 1200px) {
+    display: block;
+  }
 
   .jac-navigation--list {
     display: flex;
