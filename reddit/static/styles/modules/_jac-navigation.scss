@@ -11,13 +11,20 @@
   }
 }
 
-.navbar-nav {
+.nav:not(.navbar-right) {
+  margin: 5px 0 0;
+
   > li {
     a {
+      border-radius: 20px;
+      border: 1px solid #ffd016;
       color: #fff !important;
+      margin-left: 6px;
+      padding: 8px 20px;
     }
   }
 }
+
 
 .jac-navigation {
   background-color: #5c006a;
@@ -51,7 +58,7 @@
         font-size: 12px;
         margin: 12px 22px;
         text-transform: uppercase;
-        white-space: nowrap;                
+        white-space: nowrap;
       }
     }
   }
