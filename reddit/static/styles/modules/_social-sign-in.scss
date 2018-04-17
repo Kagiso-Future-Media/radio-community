@@ -1,0 +1,31 @@
+.social-sign-in {
+  margin: 0 0 20px;
+
+  > p {
+    font-size: 20px;
+    margin: 0 0 15px;
+  }
+
+  > ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    > li {
+      display: inline-block;
+      padding: 12px 40px;
+
+      img {
+        width: 22px;
+      }
+
+      &.facebook {
+        background-color: #3b5998;
+      }
+
+      &.google-plus {
+        background-color: #dd4b39;
+      }
+    }
+  }
+}
