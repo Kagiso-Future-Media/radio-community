@@ -16,10 +16,18 @@
         // Vall your function here
         rc.common.welcomeSetup();
         rc.common.cancelPostSubmissionSetup();
+        rc.common.socialSignInSetup();
       },
       // Create your function here
       welcomeSetup: function () {
         console.log('%cWelcome To Community Radio!', 'color: red; font-size: 12px; font-weight: bold');
+      },
+      socialSignInSetup: function () {
+        const $socialFacebookItem = $('.facebook').find('img');
+        const $socialGoogleItem = $('.google-plus').find('img');
+
+        $socialFacebookItem.attr('src', '../static/img/icons/facebook_icon.png');
+        $socialGoogleItem.attr('src', '../static/img/icons/google_plus_icon.png');
       },
       cancelPostSubmissionSetup: function () {
         const $cancelBtn = $('#js--cancel-submission');
