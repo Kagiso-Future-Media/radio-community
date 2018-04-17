@@ -18,10 +18,18 @@
         rc.common.cancelPostSubmissionSetup();
         rc.common.socialSignInSetup();
         rc.common.setupFooter();
+        // rc.common.mainBodyFooterSpacing();
       },
       // Create your function here
       welcomeSetup: function () {
         console.log('%cWelcome To Community Radio!', 'color: red; font-size: 12px; font-weight: bold');
+      },
+      mainBodyFooterSpacing: function () {
+        const $footerHeight = $('.footer').outerHeight();
+
+        $('.main-content').css({
+          'height' : `calc(100vh - ${$footerHeight}px)`
+        })
       },
       setupFooter: function () {
         if(window.innerWidth < 992) {

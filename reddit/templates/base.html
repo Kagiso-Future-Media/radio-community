@@ -1,6 +1,5 @@
 {% load static %}
 
-
 <!DOCTYPE html>
 <html lang="" xmlns="http://www.w3.org/1999/html">
 <head>
@@ -22,7 +21,6 @@
 </head>
 
 <body>
-
   {% block navbar %}
     {% include '__layout/navbar.html' %}
   {% endblock %}
@@ -36,7 +34,7 @@
     </div>
   {% endfor %}
 
-  <div class="container">
+  <div class="container main-content">
     {% block content %}
       <a>There's nothing here!</a>
     {% endblock %}
@@ -48,7 +46,6 @@
   <script src="{% static "js/bootstrap.min.js" %}"></script>
   <script src="{% static 'js/reddit.js' %} "></script>
   <script src="{% static 'js/site.js' %} "></script>
-  {% block js %}
-  {% endblock %}
+  {% block js %}{% endblock %}
 </body>
 </html>
