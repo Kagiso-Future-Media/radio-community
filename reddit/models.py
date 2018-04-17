@@ -1,20 +1,18 @@
 import boto3
 import mistune
-import os
-
 from PIL import Image
 from django.conf import settings
-from django.core.exceptions import ValidationError
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ValidationError
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.utils import timezone
-from mptt.models import MPTTModel, TreeForeignKey
-from radio_community.utils.model_utils import ContentTypeAware, MttpContentTypeAware
-
-from s3direct.fields import S3DirectField
+from mptt.models import TreeForeignKey
+from radio_community.utils.model_utils import (
+    ContentTypeAware,
+    MttpContentTypeAware
+)
+from kagiso_auth.models import KagisoUser
 
 
 s3_resource = boto3.resource(
@@ -22,6 +20,14 @@ s3_resource = boto3.resource(
     aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
     aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
 )
+
+
+class CustomUser(models.Model):
+    user = models.ForeignKey(KagisoUser, on_delete=models.PROTECT)
+    moderator = models.BooleanField(default=False)
+    admin = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
 
 
 class Submission(ContentTypeAware):
