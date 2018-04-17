@@ -254,3 +254,21 @@ def submit(request):
             return redirect('/comments/{}'.format(submission.id))
 
     return render(request, 'public/submit.html', {'form': submission_form})
+
+
+def delete_submission(request, object_id):
+    submission = get_object_or_404(Submission, pk=object_id)
+    submission.delete()
+    messages.success(
+        request, 'Submission Deleted with ID : {0}'.format(object_id)
+    )
+    return redirect('/')
+
+
+def delete_comment(request, object_id):
+    node = get_object_or_404(Comment, pk=object_id)
+    node.delete()
+    messages.success(
+        request, 'Comment Deleted with ID : {0}'.format(object_id)
+    )
+    return redirect('/')

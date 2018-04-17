@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 .gitignore
 .idea/
@@ -10,3 +11,18 @@ reddit/utils/__pycache__/
 users/__pycache__/
 venv/
 reddit/radio_community/__pycache__/
+=======
+.cache
+.coverage
+.DS_Store
+/radio_community/settings/local.py
+htmlcov/*
+*.pyc
+__pycache__
+pytestdebug.log
+staticfiles
+venv
+.idea
+node_modules/
+.vscode
+>>>>>>> 0c88e133109f5ed383ca216e975e14a6c5379a92

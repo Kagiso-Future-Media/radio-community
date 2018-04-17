@@ -27,6 +27,9 @@
                 <ul class="buttons">
                     <li><a href="javascript:void(0)" name="replyButton">reply</a></li>
                 </ul>
+                <a href="comments/node/{{ node.id }}/delete/">
+                    DELETE
+                </a>
             </div>
             {% if not node.is_leaf_node %}
                 {{ children }}
