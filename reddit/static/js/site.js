@@ -18,11 +18,24 @@
         rc.common.cancelPostSubmissionSetup();
         rc.common.socialSignInSetup();
         rc.common.setupFooter();
+        rc.common.loginMessageSetup();
         // rc.common.mainBodyFooterSpacing();
       },
       // Create your function here
       welcomeSetup: function () {
         console.log('%cWelcome To Community Radio!', 'color: red; font-size: 12px; font-weight: bold');
+      },
+      loginMessageSetup: function () {
+        const message = `
+          <div class="alert alert-info">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            You can use your Radio/Competitions/Win login details
+          </div>
+        `;
+
+        if (location.pathname === '/sign_in/') {
+          $('.container.main-content').prepend(message);
+        }
       },
       mainBodyFooterSpacing: function () {
         const $footerHeight = $('.footer').outerHeight();
