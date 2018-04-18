@@ -16,8 +16,8 @@
 
   > li {
     a {
-      border-radius: 20px;
       border: 1px solid #ffd016;
+      border-radius: 20px;
       color: #fff !important;
       margin-left: 6px;
       padding: 8px 20px;
@@ -32,8 +32,8 @@
 
 .jac-navigation {
   background-color: #5c006a;
-  margin: 0 0 50px;
   display: none;
+  margin: 0 0 50px;
 
   @media(min-width: 1200px) {
     display: block;
