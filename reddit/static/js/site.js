@@ -23,7 +23,7 @@
       },
       // Create your function here
       welcomeSetup: function () {
-        console.log('%cWelcome To Community Radio!', 'color: red; font-size: 12px; font-weight: bold');
+        console.log('%cWelcome To Radio Community!', 'color: #ccc; font-size: 22px; font-weight: bold');
       },
       loginMessageSetup: function () {
         const message = `
@@ -33,7 +33,7 @@
           </div>
         `;
 
-        if (location.pathname === '/sign_in/') {
+        if ($('body').hasClass('signin')) {
           $('.container.main-content').prepend(message);
         }
       },
