@@ -1,4 +1,6 @@
-{% extends 'base.html' %} {% load humanize %} {% block content %}
+{% extends 'base.html' %} {% load humanize %} 
+
+{% block content %}
 <table>
   <tbody>
     {% for submission in submissions %}
@@ -17,7 +19,11 @@
         </div>
       </td>
       <td class="info-container">
-        <!-- <img src="{{ submission.image }}" alt="{{ submission.title }}"> -->
+        {% if submission.image %}
+          <img src="{{ submission.image }}" alt="{{ submission.title }}">
+        {% else %}
+          <img src="https://dummyimage.com/40x40/000/fff" alt="placeholder image">
+        {% endif %}
         <a class="thread-title" href="{{ submission.linked_url }}" target="_blank">{{ submission.title }}</a>
         <br>
         <h6 class="thread-info">

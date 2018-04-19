@@ -17,10 +17,49 @@
         rc.common.welcomeSetup();
         rc.common.cancelPostSubmissionSetup();
         rc.common.socialSignInSetup();
+        rc.common.setupFooter();
+        rc.common.loginMessageSetup();
+        // rc.common.mainBodyFooterSpacing();
       },
       // Create your function here
       welcomeSetup: function () {
-        console.log('%cWelcome To Community Radio!', 'color: red; font-size: 12px; font-weight: bold');
+        console.log('%cWelcome To Radio Community!', 'color: #ccc; font-size: 22px; font-weight: bold');
+      },
+      loginMessageSetup: function () {
+        const message = `
+          <div class="alert alert-info">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            You can use your Radio/Competitions/Win login details
+          </div>
+        `;
+
+        if ($('body').hasClass('signin')) {
+          $('.container.main-content').prepend(message);
+        }
+      },
+      mainBodyFooterSpacing: function () {
+        const $footerHeight = $('.footer').outerHeight();
+
+        $('.main-content').css({
+          'height' : `calc(100vh - ${$footerHeight}px)`
+        })
+      },
+      setupFooter: function () {
+        if(window.innerWidth < 992) {
+          $('.footer--column').each(function() {
+            var $this = $(this);
+
+            $('.footer--column-title', $this).on('click', function(e) {
+              e.preventDefault();
+
+              $(this).toggleClass('is-expanded');
+
+              var $footer_column_list = $('.footer--column-list', $this);
+              $footer_column_list.slideToggle();
+              return false;
+            });
+          });
+        }
       },
       socialSignInSetup: function () {
         const $socialFacebookItem = $('.facebook').find('img');
