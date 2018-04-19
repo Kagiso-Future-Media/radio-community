@@ -36,7 +36,7 @@
             </li>
             <li class="divider"></li>
             <li>
-              <form id="logoutForm" action="/logout/" method="post">
+              <form id="logoutForm" action="/sign_out/" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="current_page" value="{{ request.path }}">
               </form>
