@@ -12,8 +12,14 @@
     padding: 0;
 
     > li {
-      display: inline-block;
-      padding: 12px 40px;
+      display: inline-flex;
+      justify-content: center;
+      padding: 12px 0;
+      width: 48%;
+
+      @media (min-width: 768px) {
+        width: 13%;
+      }
 
       img {
         width: 22px;

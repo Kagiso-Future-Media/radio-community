@@ -11,7 +11,7 @@
   }
 }
 
-.nav:not(.navbar-right) {  
+.nav:not(.navbar-right) {
   margin: 7.5px -15px;
 
   @media (min-width: 768px) {
@@ -28,8 +28,8 @@
 .navbar--login,
 .navbar--register {
   background-color: transparent;
-  border-radius: 20px;
   border: 1px solid #ffd016;
+  border-radius: 20px;
   color: #fff !important;
   margin-left: 6px;
   margin-top: 10px;
