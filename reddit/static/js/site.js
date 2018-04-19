@@ -29,7 +29,7 @@
         const message = `
           <div class="alert alert-info">
             <button type="button" class="close" data-dismiss="alert">×</button>
-            You can use your Radio/Competitions/Win login details
+            Sign in with your existing Jacaranda FM details or sign up using your email address and unique password.
           </div>
         `;
 
