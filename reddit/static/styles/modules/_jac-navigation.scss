@@ -13,22 +13,34 @@
 
 .nav:not(.navbar-right) {
   margin: 5px 0 0;
-
-  > li {
-    a {
-      border: 1px solid #ffd016;
-      border-radius: 20px;
-      color: #fff !important;
-      margin-left: 6px;
-      padding: 8px 20px;
-    }
-  }
 }
 
 .dropdown-toggle {
   color: #fff !important;
 }
 
+.navbar--home,
+.navbar--submit,
+.navbar--login,
+.navbar--register {
+  background-color: transparent;
+  border: 1px solid #ffd016;
+  border-radius: 20px;
+  color: #fff !important;
+  margin-left: 6px;
+  padding: 8px 20px !important;
+  transition: all 300ms ease-in-out;
+
+  &:hover {
+    background-color: #ffd016 !important;
+    color: #000 !important;
+  }
+}
+
+.navbar--login,
+.navbar--register {
+  margin: 6px 5px 0;
+}
 
 .jac-navigation {
   background-color: #5c006a;
