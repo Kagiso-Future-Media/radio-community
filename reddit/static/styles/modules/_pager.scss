@@ -1,5 +1,14 @@
 // TODO: Need to styled disabled state!
 .pager {
+  li {
+    &.disabled {
+      > a {
+        background: #ccc !important;
+        text-decoration: line-through; 
+      }
+    }
+  }
+
   a {
     color: #fff !important;
     background: #4e034f !important;
