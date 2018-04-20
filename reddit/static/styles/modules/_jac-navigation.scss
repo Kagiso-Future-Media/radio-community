@@ -24,7 +24,6 @@
 }
 
 .navbar--home,
-.navbar--submit,
 .navbar--login,
 .navbar--register {
   background-color: transparent;
@@ -43,6 +42,36 @@
   &:hover {
     background-color: #ffd016 !important;
     color: #000 !important;
+  }
+}
+
+.navbar--submit {
+  align-items: center;
+  background: #ffd016;
+  border-radius: 30px;
+  color: #4a4a4a;
+  display: inline-flex;
+  font-weight: 500;
+  margin: 20px 0;
+  padding: 11px 22px;
+  transition: all 300ms ease-in;
+
+  &:hover {
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, .06);
+  }
+
+  .submit--add {
+    border: 1px dashed #4a4a4a;
+    border-radius: 100%;
+    display: inline-block;
+    height: 26px;
+    margin-right: 10px;
+    width: 26px;
+
+    .submit--add-icon {
+      margin: 1px 0 0 6px;
+      width: 12px;
+    }
   }
 }
 

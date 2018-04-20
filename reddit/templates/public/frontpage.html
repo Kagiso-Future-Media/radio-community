@@ -1,6 +1,15 @@
-{% extends 'base.html' %} {% load humanize %} 
+{% extends 'base.html' %}
+{% load humanize static %} 
 
 {% block content %}
+
+<a href="{% url 'submit' %}" class="navbar--submit">
+  <span class="submit--add">
+    <img src="{% static "img/icon_add.svg" %}" alt="add post icon" class="submit--add-icon">
+  </span>
+  Add Post
+</a>
+
 <table>
   <tbody>
     {% for submission in submissions %}
