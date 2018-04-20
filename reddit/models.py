@@ -70,6 +70,14 @@ class Submission(ContentTypeAware):
         blank=True,
         validators=[validate_image]
     )
+    image_url = models.CharField(
+        blank=True,
+        max_length=5000
+    )
+    image_compress_url = models.CharField(
+        blank=True,
+        max_length=5000
+    )
     text = models.TextField(max_length=5000, blank=True)
     text_html = models.TextField(blank=True)
     ups = models.IntegerField(default=0)
