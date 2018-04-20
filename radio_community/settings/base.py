@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'mptt',
     'kagiso_auth',
     's3direct',
+    'compressor',
 ]
 
 
@@ -62,6 +63,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'radio_community.urls'
+
+COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'django_libsass.SassCompiler'),
+)
 
 TEMPLATES = [
     {
@@ -139,10 +144,8 @@ AWS_QUERYSTRING_AUTH = False
 AWS_S3_CALLING_FORMAT = OrdinaryCallingFormat()
 
 S3DIRECT_DESTINATIONS = {
-    's3_dest': {
-        'key': 'uploads/images',
-        'allowed': ['image/jpeg', 'image/png', 'image/gif'],  # Default allow all mime types
-        # 'content_length_range': (5000, 8000),  # Default allow any size
+    'media_destination': {
+        'key': 'uploads/media',
     }
 }
 
