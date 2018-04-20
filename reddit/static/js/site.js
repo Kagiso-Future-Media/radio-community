@@ -18,11 +18,19 @@
         rc.common.cancelPostSubmissionSetup();
         rc.common.socialSignInSetup();
         rc.common.setupFooter();
+        rc.common.loginMessageSetup();
         // rc.common.mainBodyFooterSpacing();
       },
       // Create your function here
       welcomeSetup: function () {
-        console.log('%cWelcome To Community Radio!', 'color: red; font-size: 12px; font-weight: bold');
+        console.log('%cWelcome To Radio Community!', 'color: #ccc; font-size: 22px; font-weight: bold');
+      },
+      loginMessageSetup: function () {
+        const message = `<p>Or sign in with your existing Jacaranda FM details or sign up using your email address and unique password.</p>`;
+
+        if ($('body').hasClass('signin')) {
+          $('.social-sign-in').append(message);
+        }
       },
       mainBodyFooterSpacing: function () {
         const $footerHeight = $('.footer').outerHeight();

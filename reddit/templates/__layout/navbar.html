@@ -14,11 +14,11 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
       <ul class="nav navbar-nav">
         <li>
-          <a href="{% url 'frontpage' %}">Home</a>
+          <a href="{% url 'frontpage' %}" class="navbar--home">Home</a>
         </li>
-        <li>
-          <a href="{% url 'submit' %}">Submit</a>
-        </li>
+        <!-- <li>
+          <a href="{% url 'submit' %}" class="navbar--submit">Submit</a>
+        </li> -->
       </ul>
       <ul class="nav navbar-nav navbar-right ">
         {% if user.is_authenticated %}
@@ -38,7 +38,7 @@
             </li>
             <li class="divider"></li>
             <li>
-              <form id="logoutForm" action="/logout/" method="post">
+              <form id="logoutForm" action="/sign_out/" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="current_page" value="{{ request.path }}">
               </form>
@@ -48,10 +48,10 @@
         </li>
         {% else %}
         <li>
-          <a href="{% url 'sign_in' %}">Login</a>
+          <a href="{% url 'sign_in' %}" class="navbar--login">Login</a>
         </li>
         <li>
-          <a href="{% url 'sign_up' %}">Register</a>
+          <a href="{% url 'sign_up' %}" class="navbar--register">Register</a>
         </li>
         {% endif %}
       </ul>
