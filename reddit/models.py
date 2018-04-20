@@ -32,13 +32,11 @@ def validate_image(field_file_obj):
         raise ValidationError(
             'Max file size is {0}MB'.format(megabyte_limit)
         )
-    if field_file_obj.width > settings.MIN_IMAGE_WIDTH and field_file_obj.height > settings.MIN_IMAGE_HEIGHT:  # noqa
+    if field_file_obj.width > settings.MIN_IMAGE_WIDTH or field_file_obj.height > settings.MIN_IMAGE_HEIGHT:  # noqa
         raise ValidationError(
-            'Image WIDTH : {0} & HEIGHT : {1}. Minimum WIDTH: {2} & HEIGHT: {3}.'.format(  # noqa
-                field_file_obj.width,
-                field_file_obj.height,
-                settings.MIN_IMAGE_HEIGHT,
-                settings.MIN_IMAGE_WIDTH
+            'Maximum WIDTH: {0} & HEIGHT: {1}.'.format(
+                settings.MIN_IMAGE_WIDTH,
+                settings.MIN_IMAGE_HEIGHT
             )
         )
     field_file_obj.file.seek(0)
