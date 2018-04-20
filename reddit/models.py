@@ -1,25 +1,53 @@
 import boto3
-import mistune
-from PIL import Image
+
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
+
+from kagiso_auth.models import KagisoUser
+
+import mistune
 from mptt.models import TreeForeignKey
+from PIL import Image
+
 from radio_community.utils.model_utils import (
     ContentTypeAware,
     MttpContentTypeAware
 )
-from kagiso_auth.models import KagisoUser
-
 
 s3_resource = boto3.resource(
     's3',
     aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
     aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
 )
+
+
+def validate_image(field_file_obj):
+    file_size = field_file_obj.file.size
+    megabyte_limit = 10.0
+    if file_size > megabyte_limit * 1024 * 1024:
+        raise ValidationError(
+            'Max file size is {0}MB'.format(megabyte_limit)
+        )
+    if field_file_obj.width > settings.MIN_IMAGE_WIDTH and field_file_obj.height > settings.MIN_IMAGE_HEIGHT:  # noqa
+        raise ValidationError(
+            'Image WIDTH : {0} & HEIGHT : {1}. Minimum WIDTH: {2} & HEIGHT: {3}.'.format(  # noqa
+                field_file_obj.width,
+                field_file_obj.height,
+                settings.MIN_IMAGE_HEIGHT,
+                settings.MIN_IMAGE_WIDTH
+            )
+        )
+    field_file_obj.file.seek(0)
+    if field_file_obj.file.content_type not in (
+            'image/png', 'image/jpeg', 'image/gif'
+    ):
+        raise ValidationError(
+            'Image is not valid. Please upload a JPEG, PNG or GIF image.'
+        )
 
 
 class CustomUser(models.Model):
@@ -29,18 +57,20 @@ class CustomUser(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
-
 class Submission(ContentTypeAware):
     author_name = models.CharField(null=False, max_length=50)
-    author = models.ForeignKey('kagiso_auth.KagisoUser', on_delete=models.CASCADE, related_name='+')
+    author = models.ForeignKey(
+        'kagiso_auth.KagisoUser',
+        on_delete=models.CASCADE,
+        related_name='+'
+    )
     title = models.CharField(max_length=250)
     url = models.URLField(null=True, blank=True)
-    # image = S3DirectField(dest='s3_dest', blank=True)
     image = models.ImageField(
         upload_to='images/radio_com/%Y/%m/%d/',
         null=True,
-        blank=True
-        # validators=[validate_image]
+        blank=True,
+        validators=[validate_image]
     )
     text = models.TextField(max_length=5000, blank=True)
     text_html = models.TextField(blank=True)
@@ -58,21 +88,25 @@ class Submission(ContentTypeAware):
     @property
     def linked_url(self):
         if self.url:
-            return "{}".format(self.url)
+            return '{}'.format(self.url)
         else:
-            return "/comments/{}".format(self.id)
+            return '/comments/{}'.format(self.id)
 
     @property
     def comments_url(self):
         return '/comments/{}'.format(self.id)
 
     def __unicode__(self):
-        return "<Submission:{}>".format(self.id)
+        return '<Submission:{}>'.format(self.id)
 
 
 class Comment(MttpContentTypeAware):
     author_name = models.CharField(null=False, max_length=50)
-    author = models.ForeignKey('kagiso_auth.KagisoUser', on_delete=models.CASCADE, related_name='+')
+    author = models.ForeignKey(
+        'kagiso_auth.KagisoUser',
+        on_delete=models.CASCADE,
+        related_name='+'
+    )
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
     parent = TreeForeignKey(
         'self',
@@ -88,12 +122,11 @@ class Comment(MttpContentTypeAware):
     score = models.IntegerField(default=0)
     raw_comment = models.TextField(blank=True)
     html_comment = models.TextField(blank=True)
-    # image = S3DirectField(dest='s3_dest', blank=True)
     image = models.ImageField(
         upload_to='images/radio_com/%Y/%m/%d/',
         null=True,
-        blank=True
-        # validators=[validate_image]
+        blank=True,
+        validators=[validate_image]
     )
 
     class MPTTMeta:
@@ -137,13 +170,20 @@ class Comment(MttpContentTypeAware):
         return comment
 
     def __unicode__(self):
-        return "<Comment:{}>".format(self.id)
+        return '<Comment:{}>'.format(self.id)
 
 
 class Vote(models.Model):
-    user = models.ForeignKey('kagiso_auth.KagisoUser', on_delete=models.CASCADE, related_name='+')
+    user = models.ForeignKey(
+        'kagiso_auth.KagisoUser',
+        on_delete=models.CASCADE,
+        related_name='+'
+    )
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
-    vote_object_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    vote_object_type = models.ForeignKey(
+        ContentType,
+        on_delete=models.CASCADE
+    )
     vote_object_id = models.PositiveIntegerField()
     vote_object = GenericForeignKey('vote_object_type', 'vote_object_id')
     value = models.IntegerField(default=0)
@@ -248,20 +288,6 @@ class Vote(models.Model):
         return vote_diff
 
 
-def validate_image(field_file_obj):
-    file_size = field_file_obj.size
-    megabyte_limit = 10.0
-    if file_size > megabyte_limit * 1024 * 1024:
-        raise ValidationError(
-            'Max file size is {0}MB'.format(megabyte_limit)
-        )
-    field_file_obj.file.seek(0)
-    if field_file_obj.content_type not in ('image/png', 'image/jpeg', 'image/gif'):
-        raise ValidationError(
-            'Image is not valid. Please upload a JPEG, PNG or GIF image.'
-        )
-
-
 def create_file_url(instance):
     if not instance:
         s3_compress = 'compressed'
@@ -278,8 +304,6 @@ def create_file_url(instance):
 def compress_image_from_post_api(instance):
     url = instance.url
     file = instance.file
-    print('FILE: ', instance.file)
-    print('FILE URL: ', instance.url)
     original_image = 'original_image.jpg'
     compressed_image = 'compressed_image.jpg'
 
@@ -320,34 +344,3 @@ def compress_image_from_post_api(instance):
 
     s3_full_file_url = '{0}{1}'.format(picture_key[0], compressed_key)
     return s3_full_file_url, original_image, compressed_image
-
-
-# @receiver(post_save, sender=Comment)
-# def update_picture_file_url(sender, instance, **kwargs):
-#     create_file_url(instance.image)
-#     instance.up_load_to_s3_after_compress()
-#
-#     if not instance.url:
-#         return
-#
-#     compress_url, original_image, compressed_image = compress_image_from_post_api(instance)  # noqa
-#
-#     if compress_url:
-#         if 'compressed' in str(instance.url):
-#             return
-#         instance.url = compress_url
-#         instance.save()
-#
-#     if original_image:
-#         try:
-#             os.remove(original_image) if os.path.exists(
-#                 original_image) else None  # noqa
-#         except FileNotFoundError:
-#             pass
-#
-#     if compressed_image:
-#         try:
-#             os.remove(compressed_image) if os.path.exists(
-#                 compressed_image) else None  # noqa
-#         except FileNotFoundError:
-#             pass
