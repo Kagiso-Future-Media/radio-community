@@ -36,9 +36,9 @@
             <a href="{{ submission.comments_url }}">{{ submission.comment_count }} comments</a>
             <br>
             {% if is_user_admin %}
-                <a href="submit/{{ submission.id }}/delete/" class="btn btn-danger info-container--delete-btn">
-                  DELETE
-                </a>
+              <a href="submit/{{ submission.id }}/delete/" class="btn btn-danger info-container--delete-btn">
+                DELETE
+              </a>
             {% endif %}
           </li>
         </ul>

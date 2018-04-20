@@ -4,6 +4,10 @@
   > p {
     font-size: 20px;
     margin: 0 0 15px;
+
+    &:last-child {
+      margin: 17px 0;
+    }
   }
 
   > ul {
