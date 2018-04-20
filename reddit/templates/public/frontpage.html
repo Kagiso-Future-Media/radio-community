@@ -1,6 +1,15 @@
-{% extends 'base.html' %} {% load humanize %} 
+{% extends 'base.html' %}
+{% load humanize static %} 
 
 {% block content %}
+
+<a href="{% url 'submit' %}" class="navbar--submit">
+  <span class="submit--add">
+    <img src="{% static "img/icon_add.svg" %}" alt="add post icon" class="submit--add-icon">
+  </span>
+  Add Post
+</a>
+
 <table>
   <tbody>
     {% for submission in submissions %}
@@ -35,9 +44,11 @@
           <li>
             <a href="{{ submission.comments_url }}">{{ submission.comment_count }} comments</a>
             <br>
-            <a href="submit/{{ submission.id }}/delete/" class="btn btn-danger info-container--delete-btn">
-              DELETE
-            </a>
+            {% if is_user_admin %}
+              <a href="submit/{{ submission.id }}/delete/" class="btn btn-danger info-container--delete-btn">
+                DELETE
+              </a>
+            {% endif %}
           </li>
         </ul>
       </td>

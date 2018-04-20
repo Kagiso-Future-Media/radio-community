@@ -7,7 +7,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template.defaulttags import register
 
 from reddit.forms import SubmissionForm
-from reddit.models import Submission, Comment, Vote
+from reddit.models import (
+    Submission,
+    Comment,
+    Vote,
+    CustomUser
+)
 from reddit.utils.helpers import post_only
 from kagiso_auth.models import KagisoUser
 
@@ -45,7 +50,12 @@ def frontpage(request):
 
     submission_votes = {}
 
+    is_user_admin = False
     if request.user.is_authenticated:
+        is_user_admin = CustomUser.objects.filter(
+            user=request.user,
+            admin=True
+        )
         for submission in submissions:
             try:
                 vote = Vote.objects.get(
@@ -56,8 +66,15 @@ def frontpage(request):
             except Vote.DoesNotExist:
                 pass
 
-    return render(request, 'public/frontpage.html', {'submissions'     : submissions,
-                                                     'submission_votes': submission_votes})
+    return render(
+        request,
+        'public/frontpage.html',
+        {
+            'submissions': submissions,
+            'submission_votes': submission_votes,
+            'is_user_admin': is_user_admin
+        }
+    )
 
 
 def comments(request, thread_id=None):
@@ -108,10 +125,10 @@ def comments(request, thread_id=None):
             pass
 
     return render(request, 'public/comments.html',
-                  {'submission'   : this_submission,
-                   'comments'     : thread_comments,
+                  {'submission': this_submission,
+                   'comments': thread_comments,
                    'comment_votes': comment_votes,
-                   'sub_vote'     : sub_vote_value})
+                   'sub_vote': sub_vote_value})
 
 
 @post_only
@@ -124,8 +141,8 @@ def post_comment(request):
     raw_comment = request.POST.get('commentContent', None)
 
     if not all([parent_id, parent_type]) or \
-            parent_type not in ['comment', 'submission'] or \
-        not parent_id.isdigit():
+                    parent_type not in ['comment', 'submission'] or \
+            not parent_id.isdigit():
         return HttpResponseBadRequest()
 
     if not raw_comment:
@@ -183,7 +200,7 @@ def vote(request):
     # if one of the objects is None, 0 or some other bool(value) == False value
     # or if the object type isn't 'comment' or 'submission' it's a bad request
     if not all([vote_object_type, vote_object_id, new_vote_value]) or \
-            vote_object_type not in ['comment', 'submission']:
+                    vote_object_type not in ['comment', 'submission']:
         return HttpResponseBadRequest()
 
     # Try and get the actual object we're voting on.
@@ -212,7 +229,7 @@ def vote(request):
                            vote_value=new_vote_value)
         vote.save()
         vote_diff = new_vote_value
-        return JsonResponse({'error'   : None,
+        return JsonResponse({'error': None,
                              'voteDiff': vote_diff})
 
     # User already voted on this item, this means the vote is either
@@ -230,7 +247,7 @@ def vote(request):
             return HttpResponseBadRequest(
                 'Wrong values for old/new vote combination')
 
-    return JsonResponse({'error'   : None,
+    return JsonResponse({'error': None,
                          'voteDiff': vote_diff})
 
 
@@ -248,7 +265,10 @@ def submit(request):
             submission.generate_html()
             reddit_user = KagisoUser.objects.get(id=request.user.id)
             submission.author = reddit_user
-            submission.author_name = '{} {}'.format(reddit_user.first_name, reddit_user.last_name)
+            submission.author_name = '{} {}'.format(
+                reddit_user.first_name,
+                reddit_user.last_name
+            )
             submission.save()
             messages.success(request, 'Submission created')
             return redirect('/comments/{}'.format(submission.id))
