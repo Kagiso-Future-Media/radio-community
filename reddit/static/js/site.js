@@ -26,15 +26,10 @@
         console.log('%cWelcome To Radio Community!', 'color: #ccc; font-size: 22px; font-weight: bold');
       },
       loginMessageSetup: function () {
-        const message = `
-          <div class="alert alert-info">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            Sign in with your existing Jacaranda FM details or sign up using your email address and unique password.
-          </div>
-        `;
+        const message = `<p>Or sign in with your existing Jacaranda FM details or sign up using your email address and unique password.</p>`;
 
         if ($('body').hasClass('signin')) {
-          $('.container.main-content').prepend(message);
+          $('.social-sign-in').append(message);
         }
       },
       mainBodyFooterSpacing: function () {
