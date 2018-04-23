@@ -2,7 +2,14 @@
 {% load humanize %}
 
 {% block content %}
-    {#    Submission block#}
+    {# Submission block #}
+    <div class="comments-main-figure">
+        {% if submission.image %}
+            <img src="{{ submission.image.url }}" alt="{{ submission.title }}">
+        {% else %}
+            <img src="https://dummyimage.com/40x40/000/fff" alt="placeholder image">
+        {% endif %}
+    </div>
 
     <div class="media">
         <div class="media-left">
