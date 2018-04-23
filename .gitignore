@@ -1,6 +1,7 @@
 .gitignore
 .idea/
 radio_community/settings/staticfiles/
+radio_community/settings/__pycache__/
 radio_community/utils/__pycache__/
 reddit/__pycache__/
 reddit/management/__pycache__/
