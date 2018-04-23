@@ -38,7 +38,7 @@
         </div>
         {% csrf_token %}
         <fieldset>
-            <legend>New submission</legend>
+            <legend>New Post</legend>
             {% for field in form %}
                 <div class="form-group">
                     <label for="id_{{ field.name }}" class="col-lg-2 control-label">{{ field.name|capfirst }}</label>

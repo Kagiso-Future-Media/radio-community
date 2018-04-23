@@ -29,7 +29,7 @@
       </td>
       <td class="info-container">
         {% if submission.image %}
-          <img src="{{ submission.image }}" alt="{{ submission.title }}">
+          <img src="{{ submission.image.url }}" alt="{{ submission.title }}">
         {% else %}
           <img src="https://dummyimage.com/40x40/000/fff" alt="placeholder image">
         {% endif %}
