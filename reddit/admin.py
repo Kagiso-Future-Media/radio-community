@@ -21,6 +21,7 @@ class CommentsInline(admin.StackedInline):
 
 class SubmissionAdmin(admin.ModelAdmin):
     list_display = (
+        'id',
         'title',
         'url',
         'author',

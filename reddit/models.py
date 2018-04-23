@@ -10,7 +10,6 @@ from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-
 from kagiso_auth.models import KagisoUser
 
 import mistune
@@ -316,29 +315,28 @@ class Vote(models.Model):
 
 
 def create_image_url(instance):
-    if not instance:
-        s3_compress = 'compressed'
+    if not instance.image_url:
         s3_domain = 's3.amazonaws.com'
         s3_key = instance.image.file.obj.key
         s3_bucket_name = instance.image.file.obj.bucket_name
-        s3_full_file_url = 'https://{0}.{1}/{2}/{3}'.format(
-            s3_bucket_name, s3_domain, s3_compress, s3_key
+        s3_full_file_url = 'https://{0}.{1}/{2}'.format(
+            s3_bucket_name, s3_domain, s3_key
         )
-        instance.url = s3_full_file_url
+        instance.image_url = s3_full_file_url
         instance.save()
 
 
-def compress_image_from_post_api(instance):
+def compress_image(instance):
     image_url = instance.image_url
-    image = instance.image
+    # image = instance.image
     original_image = 'original_image.jpg'
     compressed_image = 'compressed_image.jpg'
 
     if 'compressed' in str(image_url):
         return None, None, None
 
-    print('url : {}'.format(image_url))
-    if image_url and not image:
+    key = ''
+    if image_url:
         picture_key = str(image_url).split('images')
         key = 'images{0}'.format(picture_key[1])
         s3_resource.Bucket(settings.AWS_STORAGE_BUCKET_NAME).download_file(
@@ -346,8 +344,9 @@ def compress_image_from_post_api(instance):
         )
     try:
         image = Image.open(original_image)
-        image.save(compressed_image, format='JPEG', qaulity=80)
-        image.close()
+        rgb_image = image.convert('RGB')
+        rgb_image.save(compressed_image, format='JPEG', qaulity=80)
+        rgb_image.close()
     except FileNotFoundError:
         pass
 
@@ -374,43 +373,26 @@ def compress_image_from_post_api(instance):
     return s3_full_file_url, original_image, compressed_image
 
 
-def new_compress_image(instance):
-    compressed_image = 'compressed_image.jpg'
-    try:
-        image = Image.open(instance.image)
-        image.save(compressed_image, format='JPEG', qaulity=80)
-        image.close()
-    except FileNotFoundError:
-        pass
-    print('Done')
+def delete_local_images(compressed_image, original_image):
+    if original_image:
+        try:
+            os.remove(original_image) if os.path.exists(
+                original_image) else None
+        except FileNotFoundError:
+            pass
+    if compressed_image:
+        try:
+            os.remove(compressed_image) if os.path.exists(
+                compressed_image) else None
+        except FileNotFoundError:
+            pass
 
 
 @receiver(post_save, sender=Submission)
 def update_picture_file_url(sender, instance, **kwargs):
-    create_image_url(instance.image)
-    instance.up_load_to_s3_after_compress()
-
-    if not instance.url:
-        return
-
-    compress_url, original_image, compressed_image = compress_image_from_post_api(instance)  # noqa
-
-    if compress_url:
-        if 'compressed' in str(instance.url):
-            return
-        instance.url = compress_url
+    create_image_url(instance)
+    compress_url, original_image, compressed_image = compress_image(instance)
+    if not instance.image_compress_url:
+        instance.image_compress_url = compress_url
         instance.save()
-
-    if original_image:
-        try:
-            os.remove(original_image) if os.path.exists(
-                original_image) else None  # noqa
-        except FileNotFoundError:
-            pass
-
-    if compressed_image:
-        try:
-            os.remove(compressed_image) if os.path.exists(
-                compressed_image) else None  # noqa
-        except FileNotFoundError:
-            pass
+    delete_local_images(compressed_image, original_image)
