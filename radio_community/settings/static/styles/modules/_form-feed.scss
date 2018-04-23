@@ -1,0 +1,32 @@
+.thread-info--url-source {
+  color: #ccc;
+}
+
+.info-container {
+  padding: 12px 0;
+
+  > img {
+    margin: 0 14px 20px 0;
+    width: 90%;
+    
+    @media (min-width: 768px) {
+      float: left;
+      height: auto;
+      margin: 0 14px 0 0;
+      width: 23%;
+    }
+
+    @media (min-width: 1024px) {
+      width: 12%;
+    }
+  }
+}
+
+.thread-info {
+  margin: 6px 0 !important;
+}
+
+.info-container--delete-btn {
+  color: #fff !important;
+  margin: 12px 0 0 !important;
+}
