@@ -154,6 +154,14 @@ class Comment(MttpContentTypeAware):
         blank=True,
         validators=[validate_image]
     )
+    image_url = models.CharField(
+        blank=True,
+        max_length=5000
+    )
+    image_compress_url = models.CharField(
+        blank=True,
+        max_length=5000
+    )
 
     class MPTTMeta:
         order_insertion_by = ['-score']
@@ -388,7 +396,17 @@ def delete_local_images(compressed_image, original_image):
 
 
 @receiver(post_save, sender=Submission)
-def update_picture_file_url(sender, instance, **kwargs):
+def update_picture_file_url_submission(sender, instance, **kwargs):
+    create_image_url(instance)
+    compress_url, original_image, compressed_image = compress_image(instance)
+    if not instance.image_compress_url:
+        instance.image_compress_url = compress_url
+        instance.save()
+    delete_local_images(compressed_image, original_image)
+
+
+@receiver(post_save, sender=Comment)
+def update_picture_file_url_comment(sender, instance, **kwargs):
     create_image_url(instance)
     compress_url, original_image, compressed_image = compress_image(instance)
     if not instance.image_compress_url:
