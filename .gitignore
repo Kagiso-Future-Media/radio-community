@@ -9,6 +9,7 @@ reddit/migrations/__pycache__/
 reddit/utils/__pycache__/
 users/__pycache__/
 venv/
+radio_community/__pycache__/
 reddit/radio_community/__pycache__/
 .cache
 .coverage
