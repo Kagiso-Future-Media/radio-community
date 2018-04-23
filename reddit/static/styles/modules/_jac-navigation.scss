@@ -6,6 +6,26 @@
   padding: 20px;
 }
 
+.navbar-right {
+  .dropdown-menu {
+    @media (min-width: 768px) {
+      background-color: #080808;
+      left: 0;
+      width: 100%;
+    }
+
+    > li {
+      &.divider {
+        background-color: rgba(255, 255, 255, .2);
+      }
+
+      > a {
+        color: #fff;
+      }
+    }
+  }
+}
+
 .navbar-inverse {
   .navbar-brand {
     color: #fff;
