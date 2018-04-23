@@ -25,7 +25,7 @@
       },
       // Create your function here
       welcomeSetup: function () {
-        console.log('%cWelcome To Radio Community!', 'color: #ccc; font-size: 22px; font-weight: bold');
+        console.log('%cWelcome To Radio Community! 😎', 'color: #333; font-size: 18px; font-weight: bold');
       },
       postReverseOrder: function () {
         if (location.pathname === '/') {
