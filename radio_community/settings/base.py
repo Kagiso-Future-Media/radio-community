@@ -160,6 +160,7 @@ STATIC_URL = '/static/'
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
 )
 
 MEDIA_ROOT = join(PROJECT_ROOT, 'media')
@@ -182,5 +183,5 @@ SIGN_UP_EMAIL_TEMPLATE = 'liveamp-account-confirmation'
 PASSWORD_RESET_EMAIL_TEMPLATE = 'liveamp-password-reset'
 AUTHOMATIC_CONFIG = {}
 
-MIN_IMAGE_HEIGHT = 1200
-MIN_IMAGE_WIDTH = 1200
+MIN_IMAGE_HEIGHT = 1280
+MIN_IMAGE_WIDTH = 1280
