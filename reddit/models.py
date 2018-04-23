@@ -1,3 +1,4 @@
+import os
 import boto3
 
 from django.conf import settings
@@ -6,6 +7,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from kagiso_auth.models import KagisoUser
 
@@ -70,6 +73,14 @@ class Submission(ContentTypeAware):
         blank=True,
         validators=[validate_image]
     )
+    image_url = models.CharField(
+        blank=True,
+        max_length=5000
+    )
+    image_compress_url = models.CharField(
+        blank=True,
+        max_length=5000
+    )
     text = models.TextField(max_length=5000, blank=True)
     text_html = models.TextField(blank=True)
     ups = models.IntegerField(default=0)
@@ -96,6 +107,23 @@ class Submission(ContentTypeAware):
 
     def __unicode__(self):
         return '<Submission:{}>'.format(self.id)
+
+    def up_load_to_s3_after_compress(self):
+        try:
+            local_file_name = str(self.image.name).split('/').pop()
+            compressed_key = 'compressed/{0}'.format(self.image.name)
+            my_bucket = settings.AWS_STORAGE_BUCKET_NAME
+            data = open(local_file_name, 'r+b')
+            data.seek(0)
+            s3_resource_bucket = s3_resource.Bucket(my_bucket)
+            s3_resource_bucket.put_object(
+                Key=compressed_key,
+                Body=data,
+                ContentType='image/jpeg'
+            )
+            data.close()
+        except FileNotFoundError:
+            pass
 
 
 class Comment(MttpContentTypeAware):
@@ -286,38 +314,38 @@ class Vote(models.Model):
         return vote_diff
 
 
-def create_file_url(instance):
-    if not instance:
-        s3_compress = 'compressed'
+def create_image_url(instance):
+    if not instance.image_url:
         s3_domain = 's3.amazonaws.com'
-        s3_key = instance.file.file.obj.key
-        s3_bucket_name = instance.file.file.obj.bucket_name
-        s3_full_file_url = 'https://{0}.{1}/{2}/{3}'.format(
-            s3_bucket_name, s3_domain, s3_compress, s3_key
+        s3_key = instance.image.file.obj.key
+        s3_bucket_name = instance.image.file.obj.bucket_name
+        s3_full_file_url = 'https://{0}.{1}/{2}'.format(
+            s3_bucket_name, s3_domain, s3_key
         )
-        instance.url = s3_full_file_url
+        instance.image_url = s3_full_file_url
         instance.save()
 
 
-def compress_image_from_post_api(instance):
-    url = instance.url
-    file = instance.file
+def compress_image(instance):
+    image_url = instance.image_url
     original_image = 'original_image.jpg'
     compressed_image = 'compressed_image.jpg'
 
-    if 'compressed' in str(url):
+    if 'compressed' in str(image_url):
         return None, None, None
 
-    if url and not file:
-        picture_key = str(url).split('images')
+    key = ''
+    if image_url:
+        picture_key = str(image_url).split('images')
         key = 'images{0}'.format(picture_key[1])
         s3_resource.Bucket(settings.AWS_STORAGE_BUCKET_NAME).download_file(
             key, original_image
         )
     try:
         image = Image.open(original_image)
-        image.save(compressed_image, format='JPEG', qaulity=80)
-        image.close()
+        rgb_image = image.convert('RGB')
+        rgb_image.save(compressed_image, format='JPEG', qaulity=80)
+        rgb_image.close()
     except FileNotFoundError:
         pass
 
@@ -342,3 +370,28 @@ def compress_image_from_post_api(instance):
 
     s3_full_file_url = '{0}{1}'.format(picture_key[0], compressed_key)
     return s3_full_file_url, original_image, compressed_image
+
+
+def delete_local_images(compressed_image, original_image):
+    if original_image:
+        try:
+            os.remove(original_image) if os.path.exists(
+                original_image) else None
+        except FileNotFoundError:
+            pass
+    if compressed_image:
+        try:
+            os.remove(compressed_image) if os.path.exists(
+                compressed_image) else None
+        except FileNotFoundError:
+            pass
+
+
+@receiver(post_save, sender=Submission)
+def update_picture_file_url(sender, instance, **kwargs):
+    create_image_url(instance)
+    compress_url, original_image, compressed_image = compress_image(instance)
+    if not instance.image_compress_url:
+        instance.image_compress_url = compress_url
+        instance.save()
+    delete_local_images(compressed_image, original_image)
