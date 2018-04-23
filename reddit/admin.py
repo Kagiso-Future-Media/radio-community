@@ -20,7 +20,15 @@ class CommentsInline(admin.StackedInline):
 
 
 class SubmissionAdmin(admin.ModelAdmin):
-    list_display = ('title', 'url', 'author')
+    list_display = (
+        'id',
+        'title',
+        'url',
+        'author',
+        'image',
+        'image_url',
+        'image_compress_url'
+    )
     inlines = [CommentsInline]
 
 
