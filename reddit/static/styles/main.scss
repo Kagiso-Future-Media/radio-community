@@ -2,6 +2,9 @@
 @import 'base/_base';
 @import 'base/_buttons';
 
+//-- layout
+@import 'layout/_split-layout';
+
 //-- modules
 @import 'modules/_jac-navigation';
 @import 'modules/_footer';

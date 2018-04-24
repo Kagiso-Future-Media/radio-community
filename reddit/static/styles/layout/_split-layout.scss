@@ -1,0 +1,19 @@
+.split-layout {
+  width: 100%;
+
+  .left-column {
+    @media (min-width: 768px) {
+      border: 1px solid #000;
+      float: left;
+      width: 65%;
+    }
+  }
+
+  .right-column {
+    @media (min-width: 768px) {
+      border: 1px solid #000;
+      float: right;
+      width: 35%;
+    }
+  }
+}
