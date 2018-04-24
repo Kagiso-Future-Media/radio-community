@@ -5,24 +5,38 @@
     font-size: 20px;
     margin: 0 0 15px;
 
+    &:first-child {
+      display: none;
+    }
+
     &:last-child {
       margin: 17px 0;
     }
   }
 
   > ul {
+    display: none;
     list-style-type: none;
     margin: 0;
     padding: 0;
 
     > li {
-      display: inline-flex;
-      justify-content: center;
-      padding: 12px 0;
+      display: inline-block;
+      padding: 0;
+      text-align: center;
       width: 48%;
 
       @media (min-width: 768px) {
+        width: 20%;
+      }
+
+      @media (min-width: 1024px) {
         width: 13%;
+      }
+
+      > a {
+        display: block;
+        padding: 12px 0;
       }
 
       img {
