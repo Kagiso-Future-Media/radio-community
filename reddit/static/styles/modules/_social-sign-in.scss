@@ -5,12 +5,17 @@
     font-size: 20px;
     margin: 0 0 15px;
 
+    &:first-child {
+      display: none;
+    }
+
     &:last-child {
       margin: 17px 0;
     }
   }
 
   > ul {
+    display: none;
     list-style-type: none;
     margin: 0;
     padding: 0;
