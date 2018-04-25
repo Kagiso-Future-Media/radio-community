@@ -20,11 +20,22 @@
         rc.common.setupFooter();
         rc.common.loginMessageSetup();
         rc.common.submitPostLoader()
+        // rc.common.postReverseOrder();
         // rc.common.mainBodyFooterSpacing();
       },
       // Create your function here
       welcomeSetup: function () {
-        console.log('%cWelcome To Radio Community!', 'color: #ccc; font-size: 22px; font-weight: bold');
+        console.log('%cWelcome To Radio Community! 😎', 'color: #333; font-size: 18px; font-weight: bold');
+      },
+      postReverseOrder: function () {
+        if (location.pathname === '/') {
+          $('tbody').each(function (elem, index) {
+            const postsArr = $.makeArray($('tr', this).detach());
+  
+            postsArr.reverse();
+            $(this).append(postsArr);
+          });
+        }        
       },
       submitPostLoader: function () {
         const $postSubmitButton = $('.post-form--post-btn');
