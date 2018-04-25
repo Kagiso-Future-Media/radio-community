@@ -4,8 +4,13 @@
   }
 
   .article--figure {
-    float: left;
-    margin-right: 15px;
+    margin: 0 0 15px;
+    width: 100%;
+  
+    @media (min-width: 768px) {
+      float: left;
+      margin-right: 15px;
+    }    
   }
 
   .article--meta {

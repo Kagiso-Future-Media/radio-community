@@ -1,9 +1,15 @@
 .split-layout {
   width: 100%;
 
+  > table {
+    @media (min-width: 768px) {
+      border-collapse: initial;
+      padding: 30px;
+    }    
+  }
+
   .left-column {
     @media (min-width: 768px) {
-      // border: 1px solid #000;
       float: left;
       width: 60%;
     }
@@ -11,9 +17,9 @@
 
   .right-column {
     @media (min-width: 768px) {
-      // border: 1px solid #ccc;
+      background: rgba(0,0,0, .04);
       float: right;
-      padding: 0 30px 30px;
+      padding: 30px;
       width: 31%;
     }
   }
