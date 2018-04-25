@@ -1,4 +1,7 @@
 .main-content {
-  // border: 1px solid #000;
   max-width: 1440px;
+
+  @media (min-width: 1200px) {
+    padding: 40px 0;
+  }
 }
