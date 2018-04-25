@@ -29,16 +29,17 @@
       </td>
       <td class="info-container">
         {% if submission.image %}
-          <img src="{{ submission.image.url }}" alt="{{ submission.title }}">
+          <img src="{{ submission.image_compress_url }}" alt="{{ submission.title }}">
         {% else %}
           <img src="https://dummyimage.com/40x40/000/fff" alt="placeholder image">
         {% endif %}
-        <a class="thread-title" href="{{ submission.linked_url }}" target="_blank">{{ submission.title }}</a>
+        <a class="thread-title" href="{{ submission.linked_url }}">{{ submission.title }}</a>
+        <br>
+        <i class="thread-info--url-source">({% if submission.linked_url %}{{ submission.linked_url }}{% endif %})</i>
         <br>
         <h6 class="thread-info">
           submitted {{ submission.timestamp|naturaltime }} by
-          <a href="/user/{{ submission.author_name }}">{{ submission.author_name }}</a>
-          <i class="thread-info--url-source">({% if submission.linked_url %}{{ submission.linked_url }}{% endif %})</i>
+          <a href="/user/{{ submission.author_name }}">{{ submission.author_name }}</a>        
         </h6>
         <ul class="buttons">
           <li>

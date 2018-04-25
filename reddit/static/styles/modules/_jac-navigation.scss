@@ -1,8 +1,29 @@
 .navbar {
   background-color: #4e034f;
+  border-color: #4e034f;
   border-radius: 0;
   margin: 0;
   padding: 20px;
+}
+
+.navbar-right {
+  .dropdown-menu {
+    @media (min-width: 768px) {
+      background-color: #080808;
+      left: 0;
+      width: 100%;
+    }
+
+    > li {
+      &.divider {
+        background-color: rgba(255, 255, 255, .2);
+      }
+
+      > a {
+        color: #fff;
+      }
+    }
+  }
 }
 
 .navbar-inverse {
