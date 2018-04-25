@@ -1,0 +1,58 @@
+.article {  
+  &:not(:last-child) {
+    margin: 0 0 20px;
+  }
+
+  .article--figure {
+    float: left;
+    margin-right: 15px;
+  }
+
+  .article--meta {
+    float: left;
+  }
+
+  .article--meta-title {
+    color: #337ab7;
+    font-size: 20px;    
+  }
+
+  .article--meta-source {
+    color: #ccc;
+    display: block;
+  }
+
+  .article--meta-comments {
+    color: #888;
+    display: block;
+    font-size: small;   
+    font-weight: 500; 
+  }
+}
+
+.side-bar--header {
+  .side-bar--review-count {
+    float: right;
+
+    .review-count {
+      background-color: #ffd016;
+      border-radius: 100%;
+      display: inline-block;
+      color: #4e4e4e;
+      font-weight: 700;
+      height: 40px;
+      padding: 10px;
+      text-align: center;
+      text-decoration: none;
+      width: 40px;
+    }
+  }
+
+  .side-bar--title {
+    margin: 0;
+  }
+
+  .side-bar--sub-title {
+    margin: 25px 0 0;
+  }
+}

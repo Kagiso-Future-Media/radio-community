@@ -3,17 +3,18 @@
 
   .left-column {
     @media (min-width: 768px) {
-      border: 1px solid #000;
+      // border: 1px solid #000;
       float: left;
-      width: 65%;
+      width: 60%;
     }
   }
 
   .right-column {
     @media (min-width: 768px) {
-      border: 1px solid #000;
+      // border: 1px solid #ccc;
       float: right;
-      width: 35%;
+      padding: 0 30px 30px;
+      width: 31%;
     }
   }
 }
