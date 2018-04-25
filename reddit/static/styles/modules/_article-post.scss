@@ -1,20 +1,36 @@
 .article {
   &:not(:last-child) {
-    margin: 0 0 20px;
+    margin: 0 0 30px;
+  }
+
+  .article-vote {
+    float: left;
+
+    .vote {
+      margin-right: 20px;
+      width: auto;
+    }
   }
 
   .article--figure {
     margin: 0 0 15px;
-    width: 100%;
+    width: 80%;
   
     @media (min-width: 768px) {
       float: left;
-      margin-right: 15px;
+      margin: 0 15px 0 0;
+      width: auto;
     }    
   }
 
   .article--meta {
-    float: left;
+    padding: 0 39px;
+
+    @media (min-width: 768px) {
+      float: left;
+      padding: 0;
+      width: 50%;
+    }
   }
 
   .article--meta-title {
