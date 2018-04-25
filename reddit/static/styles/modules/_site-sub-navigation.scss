@@ -1,0 +1,30 @@
+.sub-navigation {
+  background: #000;
+
+  li {
+    border-left: 0 !important;
+    position: relative;
+
+    &::before {
+      background-color: #fff;
+      bottom: 0;
+      content: '';
+      height: 3px;
+      left: 0;
+      opacity: 0;
+      position: absolute;
+      transition: opacity 200ms ease-in-out;
+      width: 100%;
+    }
+
+    &:hover {
+      &::before {
+        opacity: 1;
+      }
+    }
+
+    &:last-child {
+      border-right: 0 !important;
+    }
+  }
+}

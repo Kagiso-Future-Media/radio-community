@@ -101,16 +101,17 @@
   margin: 6px 5px 0;
 }
 
-.jac-navigation {
+.site-navigation {
   background-color: #5c006a;
   display: none;
   margin: 0 0 50px;
 
   @media(min-width: 1200px) {
     display: block;
+    margin: 0;
   }
 
-  .jac-navigation--list {
+  .site-navigation--list {
     display: flex;
     list-style-type: none;
     margin: 0 auto;
