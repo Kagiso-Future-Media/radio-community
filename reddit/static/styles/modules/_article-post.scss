@@ -48,6 +48,10 @@
       float: right;
       font-size: 12px;
       padding: 4px 10px;
+
+      &:disabled {
+        text-decoration: line-through;
+      }
     }
   }
 
