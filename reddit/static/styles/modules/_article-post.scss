@@ -1,4 +1,4 @@
-.article {  
+.article {
   &:not(:last-child) {
     margin: 0 0 20px;
   }
@@ -14,7 +14,7 @@
 
   .article--meta-title {
     color: #337ab7;
-    font-size: 20px;    
+    font-size: 20px;
   }
 
   .article--meta-source {
@@ -25,8 +25,8 @@
   .article--meta-comments {
     color: #888;
     display: block;
-    font-size: small;   
-    font-weight: 500; 
+    font-size: small;
+    font-weight: 500;
   }
 }
 
@@ -37,8 +37,8 @@
     .review-count {
       background-color: #ffd016;
       border-radius: 100%;
-      display: inline-block;
       color: #4e4e4e;
+      display: inline-block;
       font-weight: 700;
       height: 40px;
       padding: 10px;
