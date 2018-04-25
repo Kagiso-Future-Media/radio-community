@@ -1,0 +1,26 @@
+.split-layout {
+  width: 100%;
+
+  > table {
+    @media (min-width: 768px) {
+      border-collapse: initial;
+      padding: 30px;
+    }
+  }
+
+  .left-column {
+    @media (min-width: 768px) {
+      float: left;
+      width: 60%;
+    }
+  }
+
+  .right-column {
+    @media (min-width: 768px) {
+      background: rgba(0, 0, 0, .04);
+      float: right;
+      padding: 30px;
+      width: 31%;
+    }
+  }
+}
