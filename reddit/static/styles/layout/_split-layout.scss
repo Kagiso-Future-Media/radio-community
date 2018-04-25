@@ -20,6 +20,10 @@
       background: rgba(0, 0, 0, .04);
       float: right;
       padding: 30px;
+      width: 40%;
+    }
+
+    @media (min-width: 1200px) {
       width: 31%;
     }
   }
