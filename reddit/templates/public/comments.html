@@ -5,7 +5,7 @@
     {# Submission block #}
     <div class="comments-main-figure">
         {% if submission.image %}
-            <img src="{{ submission.image.url }}" alt="{{ submission.title }}">
+            <img src="{{ submission.image_compress_url }}" alt="{{ submission.title }}">
         {% else %}
             <img src="https://dummyimage.com/40x40/000/fff" alt="placeholder image">
         {% endif %}
@@ -28,6 +28,8 @@
         <div class="media-body">
             <div class="reply-container">
                 <a class="thread-title" href="{{ submission.linked_url }}">{{ submission.title }}</a>
+                <br>
+                <i class="thread-info--url-source">({% if submission.linked_url %}{{ submission.linked_url }}{% endif %})</i>
                 <br>
                 <a href="submit/{{ submission.id }}/delete/" class="btn btn-danger reply-container--delete-btn">
                     DELETE
