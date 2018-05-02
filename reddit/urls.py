@@ -35,4 +35,9 @@ urlpatterns = [
         ),
     url(r'^post/comment/$', views.post_comment, name='post_comment'),
     url(r'^vote/$', views.vote, name='vote'),
+    url(
+        r'^raw/$',
+        views.rawpage,
+        name='raw'
+    ),
 ]

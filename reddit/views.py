@@ -31,6 +31,13 @@ def get_item(dictionary, key):  # pragma: no cover
     return dictionary.get(key)
 
 
+def rawpage(request):
+    """
+    Serves raw submission listings
+    """
+    return render(request, 'public/raw.html')
+
+
 def frontpage(request):
     """
     Serves frontpage and all additional submission listings
