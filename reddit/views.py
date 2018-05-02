@@ -38,6 +38,13 @@ def rawpage(request):
     return render(request, 'public/raw.html')
 
 
+def reviewpage(request):
+    """
+    Serves review listings. ADMINS ONLY!
+    """
+    return render(request, 'public/review.html')    
+
+
 def frontpage(request):
     """
     Serves frontpage and all additional submission listings

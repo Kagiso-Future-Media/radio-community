@@ -40,4 +40,9 @@ urlpatterns = [
         views.rawpage,
         name='raw'
     ),
+    url(
+        r'^review/$',
+        views.reviewpage,
+        name='review'
+    )
 ]

@@ -1,7 +1,9 @@
 <div class="side-bar right-column">
   <header class="side-bar--header clearfix">
     <div class="side-bar--review-count">
-      <a href="#0" class="review-count">16</a>
+      {% if is_user_admin %}
+        <a href="{% url 'review' %}" class="review-count">16</a>
+      {% endif %}
     </div> 
     <h3 class="side-bar--title">Raw</h3>
     <h4 class="side-bar--sub-title">16 Reviews</h4>    
