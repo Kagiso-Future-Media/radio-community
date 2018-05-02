@@ -66,6 +66,14 @@
 
                 {% include '__items/comment.html' %}
             </div>
+
+            <!-- TODO: Hook up buttons for admins! -->
+            {% if is_user_admin %}
+                <div class="btn-group btn-group-lg" role="group">
+                    <button type="button" class="btn btn-danger" aria-label="delete post">Delete Post</button>
+                    <button type="button" class="btn btn-success" aria-label="promote post">Promote Post</button>
+                </div>
+            {% endif %}
         </div>
 
         {% include '__layout/sidebar.html' %}
