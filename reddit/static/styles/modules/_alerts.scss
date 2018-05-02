@@ -1,23 +1,21 @@
 .alert {
+  color: #fff;
   margin: 40px 0 0;
 
   &.alert-success {
     background-color: #52be34;
     border-color: #52be34;
-    color: #fff;
   }
 
   &.alert-danger,
   &.alert-error {
     background-color: #ed5e43;
     border-color: #ed5e43;
-    color: #fff;
   }
 
   &.alert-warning {
     background-color: #efc501;
     border-color: #efc501;
-    color: #fff;
   }
 
   > .close {
