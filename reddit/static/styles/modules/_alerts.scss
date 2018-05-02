@@ -1,0 +1,22 @@
+.alert {
+  margin: 40px 0 0;
+
+  &.alert-success {
+    background-color: #52be34;
+    border-color: #52be34;
+    color: #fff;
+  }
+
+  &.alert-danger,
+  &.alert-error {
+    background-color: #ed5e43;
+    border-color: #ed5e43;
+    color: #fff;
+  }
+
+  > .close {
+    color: #fff;
+    opacity: 1;
+    text-shadow: none;
+  }
+}
