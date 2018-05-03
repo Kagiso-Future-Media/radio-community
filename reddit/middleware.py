@@ -8,8 +8,7 @@ class RequestUserMiddleware:
             request.user = request.user
         except:
             request.user = 'AnonymousUser'
-        print('=========================================')
-        print(request.user)
+
         response = self.get_response(request)
 
         return response

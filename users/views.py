@@ -1,11 +1,11 @@
 from django.contrib import messages
-from django.contrib.auth import logout, login, authenticate
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import HttpResponseBadRequest, Http404
-from django.shortcuts import render, redirect, get_object_or_404
+from django.http import Http404, HttpResponseBadRequest
+from django.shortcuts import get_object_or_404, redirect, render
 
-from reddit.forms import UserForm, ProfileForm
+from reddit.forms import ProfileForm, UserForm
 from reddit.utils.helpers import post_only
 from users.models import RedditUser
 
@@ -30,7 +30,7 @@ def edit_profile(request):
             profile = profile_form.save(commit=False)
             profile.update_profile_data()
             profile.save()
-            messages.success(request, "Profile settings saved")
+            messages.success(request, 'Profile settings saved')
     else:
         raise Http404
 
@@ -44,10 +44,10 @@ def user_login(request):
     """
 
     if request.user.is_authenticated:
-        messages.warning(request, "You are already logged in.")
+        messages.warning(request, 'You are already logged in.')
         return render(request, 'public/login.html')
 
-    if request.method == "POST":
+    if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
         if not username or not password:
@@ -63,10 +63,10 @@ def user_login(request):
                 return redirect(redirect_url)
             else:
                 return render(request, 'public/login.html',
-                              {'login_error': "Account disabled"})
+                              {'login_error': 'Account disabled'})
         else:
             return render(request, 'public/login.html',
-                          {'login_error': "Wrong username or password."})
+                          {'login_error': 'Wrong username or password.'})
 
     return render(request, 'public/login.html')
 
@@ -95,11 +95,12 @@ def register(request):
     """
     user_form = UserForm()
     if request.user.is_authenticated:
-        messages.warning(request,
-                        'You are already registered and logged in.')
+        messages.warning(
+            request,
+            'You are already registered and logged in.')
         return render(request, 'public/register.html', {'form': user_form})
 
-    if request.method == "POST":
+    if request.method == 'POST':
         user_form = UserForm(request.POST)
 
         if user_form.is_valid():

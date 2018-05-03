@@ -1,11 +1,12 @@
 from django.contrib import admin
-from reddit.models import (
-    Submission,
-    Comment,
-    Vote,
-    CustomUser
-)
 from kagiso_auth.models import KagisoUser
+
+from reddit.models import (
+    Comment,
+    CustomUser,
+    Submission,
+    Vote
+)
 
 
 # Register your models here.

@@ -1,0 +1,146 @@
+.navbar {
+  background-color: #4e034f;
+  border-color: #4e034f;
+  border-radius: 0;
+  margin: 0;
+  padding: 20px;
+}
+
+.navbar-right {
+  .dropdown-menu {
+    @media (min-width: 768px) {
+      background-color: #080808;
+      left: 0;
+      width: 100%;
+    }
+
+    > li {
+      &.divider {
+        background-color: rgba(255, 255, 255, .2);
+      }
+
+      > a {
+        color: #fff;
+      }
+    }
+  }
+}
+
+.navbar-inverse {
+  .navbar-brand {
+    color: #fff;
+  }
+}
+
+.nav:not(.navbar-right) {
+  margin: 7.5px -15px;
+
+  @media (min-width: 768px) {
+    margin: 5px 0 0;
+  }
+}
+
+.dropdown-toggle {
+  color: #fff !important;
+}
+
+.navbar--home,
+.navbar--login,
+.navbar--register {
+  background-color: transparent;
+  border: 1px solid #ffd016;
+  border-radius: 20px;
+  color: #fff !important;
+  margin-left: 6px;
+  margin-top: 10px;
+  padding: 8px 20px !important;
+  transition: all 300ms ease-in-out;
+
+  @media (min-width: 768px) {
+    margin-top: 0;
+  }
+
+  &:hover {
+    background-color: #ffd016 !important;
+    color: #000 !important;
+  }
+}
+
+.navbar--submit {
+  align-items: center;
+  background: #ffd016;
+  border-radius: 30px;
+  color: #4a4a4a;
+  display: inline-flex;
+  font-weight: 500;
+  margin: 20px 0;
+  padding: 11px 22px;
+  transition: all 300ms ease-in;
+
+  &:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .12), 0 2px 4px 0 rgba(0, 0, 0, .08);
+  }
+
+  .submit--add {
+    border: 1px dashed #4a4a4a;
+    border-radius: 100%;
+    display: inline-block;
+    height: 26px;
+    margin-right: 10px;
+    width: 26px;
+
+    .submit--add-icon {
+      margin: 1px 0 0 6px;
+      width: 12px;
+    }
+  }
+}
+
+.navbar--login,
+.navbar--register {
+  margin: 6px 5px 0;
+}
+
+.site-navigation {
+  background-color: #5c006a;
+  display: none;
+  margin: 0 0 50px;
+
+  @media(min-width: 1200px) {
+    display: block;
+    margin: 0;
+  }
+
+  .site-navigation--list {
+    display: flex;
+    list-style-type: none;
+    margin: 0 auto;
+    max-width: 960px;
+    padding: 0;
+
+    > li {
+      border-left: 1px solid rgba(255, 255, 255, .2);
+      cursor: pointer;
+      margin: 0;
+      padding: 0;
+      transition: all 300ms ease-in;
+
+      &:last-child {
+        border-right: 1px solid rgba(255, 255, 255, .2);
+      }
+
+      &:hover {
+        background-color: #000;
+      }
+
+      a {
+        color: #fff;
+        display: block;
+        font-size: 12px;
+        margin: 12px 22px;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+    }
+  }
+}

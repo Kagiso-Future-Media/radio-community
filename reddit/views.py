@@ -1,20 +1,21 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import JsonResponse, HttpResponseBadRequest, Http404, \
-    HttpResponseForbidden
-from django.shortcuts import render, redirect, get_object_or_404
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.http import (
+    Http404, HttpResponseBadRequest, HttpResponseForbidden, JsonResponse
+)
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template.defaulttags import register
+from kagiso_auth.models import KagisoUser
 
 from reddit.forms import SubmissionForm
 from reddit.models import (
-    Submission,
     Comment,
-    Vote,
-    CustomUser
+    CustomUser,
+    Submission,
+    Vote
 )
 from reddit.utils.helpers import post_only
-from kagiso_auth.models import KagisoUser
 
 
 @register.filter
@@ -121,7 +122,7 @@ def comments(request, thread_id=None):
 
             for vote in user_thread_votes:
                 comment_votes[vote.vote_object.id] = vote.value
-        except:
+        except:  # noqa
             pass
 
     return render(request, 'public/comments.html',
@@ -134,7 +135,8 @@ def comments(request, thread_id=None):
 @post_only
 def post_comment(request):
     if not request.user.is_authenticated:
-        return JsonResponse({'msg': "You need to log in to post new comments."})
+        return JsonResponse(
+            {'msg': 'You need to log in to post new comments.'})
 
     parent_type = request.POST.get('parentType', None)
     parent_id = request.POST.get('parentId', None)
@@ -142,11 +144,11 @@ def post_comment(request):
 
     if not all([parent_id, parent_type]) or \
                     parent_type not in ['comment', 'submission'] or \
-            not parent_id.isdigit():
+            not parent_id.isdigit():  # noqa
         return HttpResponseBadRequest()
 
     if not raw_comment:
-        return JsonResponse({'msg': "You have to write something."})
+        return JsonResponse({'msg': 'You have to write something.'})
     author = KagisoUser.objects.get(id=request.user.id)
     parent_object = None
     try:  # try and get comment or submission we're voting on
@@ -163,7 +165,7 @@ def post_comment(request):
                              parent=parent_object)
 
     comment.save()
-    return JsonResponse({'msg': "Your comment has been posted."})
+    return JsonResponse({'msg': 'Your comment has been posted.'})
 
 
 @post_only
@@ -192,7 +194,7 @@ def vote(request):
         new_vote_value = int(new_vote_value)
 
         if new_vote_value not in [-1, 1]:
-            raise ValueError("Wrong value for the vote!")
+            raise ValueError('Wrong value for the vote!')
 
     except (ValueError, TypeError):
         return HttpResponseBadRequest()
@@ -200,15 +202,15 @@ def vote(request):
     # if one of the objects is None, 0 or some other bool(value) == False value
     # or if the object type isn't 'comment' or 'submission' it's a bad request
     if not all([vote_object_type, vote_object_id, new_vote_value]) or \
-                    vote_object_type not in ['comment', 'submission']:
+                    vote_object_type not in ['comment', 'submission']:  # noqa
         return HttpResponseBadRequest()
 
     # Try and get the actual object we're voting on.
     try:
-        if vote_object_type == "comment":
+        if vote_object_type == 'comment':
             vote_object = Comment.objects.get(id=vote_object_id)
 
-        elif vote_object_type == "submission":
+        elif vote_object_type == 'submission':
             vote_object = Submission.objects.get(id=vote_object_id)
         else:
             return HttpResponseBadRequest()  # should never happen
@@ -218,9 +220,10 @@ def vote(request):
 
     # Try and get the existing vote for this object, if it exists.
     try:
-        vote = Vote.objects.get(vote_object_type=vote_object.get_content_type(),
-                                vote_object_id=vote_object.id,
-                                user=user)
+        vote = Vote.objects.get(
+            vote_object_type=vote_object.get_content_type(),
+            vote_object_id=vote_object.id,
+            user=user)
 
     except Vote.DoesNotExist:
         # Create a new vote and that's it.

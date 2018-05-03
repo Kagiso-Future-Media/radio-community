@@ -10,52 +10,58 @@
   Add Post
 </a>
 
-<table>
-  <tbody>
-    {% for submission in submissions %}
-    <tr>
-      <td>
-        <div class="vote" data-what-type="submission" data-what-id="{{ submission.id }}">
-          {% with vote_value=submission_votes|get_item:submission.id %}
-          <div>
-            <i class="fa fa-chevron-up {% if  vote_value == 1 %} upvoted {% endif %}" title="upvote" onclick="vote(this)"></i>
+<div class="split-layout clearfix">
+  <table class="home-feed left-column">
+    <tbody>
+      {% for submission in submissions %}
+      <tr>
+        <td>
+          <div class="vote" data-what-type="submission" data-what-id="{{ submission.id }}">
+            {% with vote_value=submission_votes|get_item:submission.id %}
+            <div>
+              <i class="fa fa-chevron-up {% if  vote_value == 1 %} upvoted {% endif %}" title="upvote" onclick="vote(this)"></i>
+            </div>
+            <div class="score" title="score">{{ submission.score }}</div>
+            <div>
+              <i class="fa fa-chevron-down{% if  vote_value == -1 %} downvoted {% endif %}" title="downvote" onclick="vote(this)"></i>
+            </div>
+            {% endwith %}
           </div>
-          <div class="score" title="score">{{ submission.score }}</div>
-          <div>
-            <i class="fa fa-chevron-down{% if  vote_value == -1 %} downvoted {% endif %}" title="downvote" onclick="vote(this)"></i>
-          </div>
-          {% endwith %}
-        </div>
-      </td>
-      <td class="info-container">
-        {% if submission.image %}
-          <img src="{{ submission.image.url }}" alt="{{ submission.title }}">
-        {% else %}
-          <img src="https://dummyimage.com/40x40/000/fff" alt="placeholder image">
-        {% endif %}
-        <a class="thread-title" href="{{ submission.linked_url }}" target="_blank">{{ submission.title }}</a>
-        <br>
-        <h6 class="thread-info">
-          submitted {{ submission.timestamp|naturaltime }} by
-          <a href="/user/{{ submission.author_name }}">{{ submission.author_name }}</a>
+        </td>
+        <td class="info-container">
+          {% if submission.image %}
+            <img src="{{ submission.image_compress_url }}" alt="{{ submission.title }}">
+          {% else %}
+            <img src="https://dummyimage.com/40x40/000/fff" alt="placeholder image">
+          {% endif %}
+          <a class="thread-title" href="{{ submission.linked_url }}">{{ submission.title }}</a>
+          <br>
           <i class="thread-info--url-source">({% if submission.linked_url %}{{ submission.linked_url }}{% endif %})</i>
-        </h6>
-        <ul class="buttons">
-          <li>
-            <a href="{{ submission.comments_url }}">{{ submission.comment_count }} comments</a>
-            <br>
-            {% if is_user_admin %}
-              <a href="submit/{{ submission.id }}/delete/" class="btn btn-danger info-container--delete-btn">
-                DELETE
-              </a>
-            {% endif %}
-          </li>
-        </ul>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+          <br>
+          <h6 class="thread-info">
+            submitted {{ submission.timestamp|naturaltime }} by
+            <a href="/user/{{ submission.author_name }}">{{ submission.author_name }}</a>        
+          </h6>
+          <ul class="buttons">
+            <li>
+              <a href="{{ submission.comments_url }}">{{ submission.comment_count }} comments</a>
+              <br>
+              {% if is_user_admin %}
+                <a href="submit/{{ submission.id }}/delete/" class="btn btn-danger info-container--delete-btn">
+                  DELETE
+                </a>
+              {% endif %}
+            </li>
+          </ul>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- RAW posts come here! -->
+  {% include '__layout/sidebar.html' %}
+</div>
 
 <nav>
   <ul class="pager">

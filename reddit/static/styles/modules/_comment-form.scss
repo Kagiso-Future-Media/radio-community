@@ -1,7 +1,26 @@
-.comments-main-figure {  
+.comments-main-figure {
+  margin: 26px 0 0;
+
   > img {
-    margin: 0 0 65px;
+    margin: 0 0 35px;
+    width: 100%;
+
+    @media (min-width: 768px) {
+      margin: 0 0 65px;
+      width: 50%;
+    }
+  }
+}
+
+.comment-group {
+  width: 100%;
+
+  @media (min-width: 768px) {
     width: 50%;
+  }
+
+  > label {
+    display: inline-block !important;
   }
 }
 
@@ -18,5 +37,8 @@
 }
 
 .reply-container--delete-btn {
+  border-color: transparent;
+  border-radius: 50px;
+  color: #fff !important;
   margin: 10px 0;
 }
