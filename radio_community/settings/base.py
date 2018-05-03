@@ -231,5 +231,3 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
 SIGN_UP_EMAIL_TEMPLATE = 'jacaranda-account-confirmation'
 PASSWORD_RESET_EMAIL_TEMPLATE = 'jacaranda-password-reset'
 AUTH_FROM_EMAIL = 'noreply@jacarandafm.com'
-
-SECURE_SSL_REDIRECT = True
