@@ -23,6 +23,7 @@ urlpatterns = [
     url(settings.ADMIN_URL, admin.site.urls),
     url(r'^', include("reddit.urls")),
     url(r'', include(kagiso_auth_urls)),
+    url(r'^oauth/', include('social_django.urls', namespace='social')),
     url(r'^s3direct/', include('s3direct.urls')),
 ]
 
