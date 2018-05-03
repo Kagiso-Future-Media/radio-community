@@ -3,6 +3,10 @@
     margin: 0 0 30px;
   }
 
+  &.is--not-full-width {
+    width: 50%;
+  }
+
   .article-vote {
     float: left;
 
@@ -43,10 +47,12 @@
       width: 50%;
     }
 
-    .btn-report {
+    .btn-report,
+    .btn-delete {
       border-radius: 30px;
       float: right;
       font-size: 12px;
+      margin: 0;
       padding: 4px 10px;
 
       &:disabled {
