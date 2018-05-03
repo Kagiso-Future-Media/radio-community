@@ -4,7 +4,13 @@
   }
 
   &.is--not-full-width {
-    width: 50%;
+    @media (min-width: 768px) {
+      width: 90%;
+    }
+
+    @media (min-width: 1200px) {
+      width: 50%;
+    }
   }
 
   .article-vote {
@@ -23,11 +29,13 @@
     @media (min-width: 768px) {
       float: left;
       margin: 0 15px 0 0;
-      width: 70%;
+      // width: 70%;
+      width: 40%;
     }
 
     @media (min-width: 1200px) {
-      width: auto;
+      // width: auto;
+      width: 25%;
     }
   }
 
