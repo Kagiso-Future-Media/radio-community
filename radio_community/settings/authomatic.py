@@ -1,6 +1,6 @@
 import os
 
-from authomatic.providers import oauth2, oauth1
+from authomatic.providers import oauth2
 
 
 # OAUTH / SOCIAL SIGN UP
