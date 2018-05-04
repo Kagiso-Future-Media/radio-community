@@ -15,6 +15,8 @@ from os.path import abspath, dirname, join
 
 from boto.s3.connection import OrdinaryCallingFormat
 
+from .authomatic import *  # noqa
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -60,6 +62,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'reddit.middleware.RequestUserMiddleware',
+    'reddit.middleware.AuthomaticRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'radio_community.urls'
@@ -167,19 +170,21 @@ MEDIA_URL = '/media/'
 # Location of root django.contrib.admin URL,
 ADMIN_URL = r'^admin/'
 
-# LOGIN_URL = '/login/'
 
 # LOGIN URL SETTINGS
 LOGIN_URL = '/sign_in/'
-# LOGIN_REDIRECT_URL = '/voting/'
+LOGIN_REDIRECT_URL = '/'
 
 AUTH_USER_MODEL = 'kagiso_auth.KagisoUser'
 
 APP_NAME = 'RadioCommunity'
-AUTH_FROM_EMAIL = 'noreply@liveamp.tv'
-SIGN_UP_EMAIL_TEMPLATE = 'liveamp-account-confirmation'
-PASSWORD_RESET_EMAIL_TEMPLATE = 'liveamp-password-reset'
-AUTHOMATIC_CONFIG = {}
+AUTH_FROM_EMAIL = 'noreply@jacarandafm.com'
+SIGN_UP_EMAIL_TEMPLATE = 'jacaranda-account-confirmation'
+PASSWORD_RESET_EMAIL_TEMPLATE = 'jacaranda-password-reset'
 
 MIN_IMAGE_HEIGHT = 1280
 MIN_IMAGE_WIDTH = 1280
+
+SIGN_UP_EMAIL_TEMPLATE = 'jacaranda-account-confirmation'
+PASSWORD_RESET_EMAIL_TEMPLATE = 'jacaranda-password-reset'
+AUTH_FROM_EMAIL = 'noreply@jacarandafm.com'
