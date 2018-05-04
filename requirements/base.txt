@@ -52,6 +52,4 @@ requests-oauthlib==0.8.0
 rjsmin==1.0.12
 s3transfer==0.1.13
 six==1.11.0
-social-auth-app-django==2.1.0
-social-auth-core==1.7.0
 wheel==0.24.0
