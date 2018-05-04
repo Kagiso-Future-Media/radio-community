@@ -31,6 +31,20 @@ def get_item(dictionary, key):  # pragma: no cover
     return dictionary.get(key)
 
 
+def rawpage(request):
+    """
+    Serves raw submission listings
+    """
+    return render(request, 'public/raw.html')
+
+
+def reviewpage(request):
+    """
+    Serves review listings. ADMINS ONLY!
+    """
+    return render(request, 'public/review.html')    
+
+
 def frontpage(request):
     """
     Serves frontpage and all additional submission listings
@@ -94,6 +108,13 @@ def comments(request, thread_id=None):
 
     thread_comments = Comment.objects.filter(submission=this_submission)
 
+    is_user_admin = False
+    if request.user.is_authenticated:
+        is_user_admin = CustomUser.objects.filter(
+            user=request.user,
+            admin=True
+        )
+
     if request.user.is_authenticated:
         try:
             reddit_user = KagisoUser.objects.get(id=request.user.id)
@@ -126,10 +147,14 @@ def comments(request, thread_id=None):
             pass
 
     return render(request, 'public/comments.html',
-                  {'submission': this_submission,
-                   'comments': thread_comments,
-                   'comment_votes': comment_votes,
-                   'sub_vote': sub_vote_value})
+                    {
+                        'submission': this_submission,
+                        'comments': thread_comments,
+                        'comment_votes': comment_votes,
+                        'sub_vote': sub_vote_value,
+                        'is_user_admin': is_user_admin
+                    }
+                )
 
 
 @post_only
