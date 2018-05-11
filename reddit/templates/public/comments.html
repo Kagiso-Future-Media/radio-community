@@ -33,9 +33,11 @@
                         <br>
                         <i class="thread-info--url-source">({% if submission.linked_url %}{{ submission.linked_url }}{% endif %})</i>
                         <br>
-                        <a href="submit/{{ submission.id }}/delete/" class="btn btn-danger reply-container--delete-btn">
-                            DELETE
-                        </a>
+                        {% if current_user == submission.author or is_user_admin %}
+                            <a href="submit/{{ submission.id }}/delete/" class="btn btn-danger reply-container--delete-btn">
+                                DELETE
+                            </a>
+                        {% endif %}
                         <br>
                         <h6 class="thread-info">submitted {{ submission.timestamp|naturaltime }} by <a
                                 href="/user/{{ submission.author_name }}">{{ submission.author_name }}</a></h6>

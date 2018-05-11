@@ -2,7 +2,10 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import (
-    Http404, HttpResponseBadRequest, HttpResponseForbidden, JsonResponse
+    Http404,
+    HttpResponseBadRequest,
+    HttpResponseForbidden,
+    JsonResponse
 )
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.defaulttags import register
@@ -12,6 +15,9 @@ from reddit.forms import SubmissionForm
 from reddit.models import (
     Comment,
     CustomUser,
+    get_filtered_submissions,
+    get_unfiltered_submissions,
+    ReportSubmission,
     Submission,
     Vote
 )
@@ -31,63 +37,70 @@ def get_item(dictionary, key):  # pragma: no cover
     return dictionary.get(key)
 
 
-def rawpage(request):
+def raw_page(request):
     """
     Serves raw submission listings
     """
-    return render(request, 'public/raw.html')
+    raw_submissions = get_unfiltered_submissions()
+    submissions, submission_votes, is_user_admin = page_body(request, raw_submissions)   # noqa
+
+    return render(
+        request,
+        'public/raw.html',
+        {
+            'submissions': submissions,
+            'submission_votes': submission_votes,
+            'current_user': request.user
+        }
+    )
 
 
-def reviewpage(request):
+def review_page(request):
     """
     Serves review listings. ADMINS ONLY!
     """
-    return render(request, 'public/review.html')    
+
+    review_submissions = Submission \
+        .objects \
+        .order_by('-score') \
+        .exclude(is_under_review=False)
+    submissions, submission_votes, is_user_admin = page_body(request, review_submissions)    # noqa
+    if not is_user_admin:
+        return HttpResponseForbidden()
+    return render(
+        request,
+        'public/review.html',
+        {
+            'submissions': submissions,
+            'submission_votes': submission_votes,
+            'is_user_admin': is_user_admin,
+        }
+    )
 
 
-def frontpage(request):
+def home_page(request):
     """
     Serves frontpage and all additional submission listings
     with maximum of 25 submissions per page.
     """
     # TODO: Serve user votes on submissions too.
 
-    all_submissions = Submission.objects.order_by('-score').all()
-    paginator = Paginator(all_submissions, 25)
-
-    page = request.GET.get('page', 1)
-    try:
-        submissions = paginator.page(page)
-    except PageNotAnInteger:
-        raise Http404
-    except EmptyPage:
-        submissions = paginator.page(paginator.num_pages)
-
-    submission_votes = {}
-
-    is_user_admin = False
-    if request.user.is_authenticated:
-        is_user_admin = CustomUser.objects.filter(
-            user=request.user,
-            admin=True
-        )
-        for submission in submissions:
-            try:
-                vote = Vote.objects.get(
-                    vote_object_type=submission.get_content_type(),
-                    vote_object_id=submission.id,
-                    user=KagisoUser.objects.get(id=request.user.id))
-                submission_votes[submission.id] = vote.value
-            except Vote.DoesNotExist:
-                pass
+    all_submissions = get_filtered_submissions()
+    raw_submissions = get_unfiltered_submissions()
+    submissions, submission_votes, is_user_admin = page_body(request, all_submissions)   # noqa
+    raw_submissions, submission_votes, is_user_admin = page_body(request, raw_submissions)   # noqa
+    reported_posts = Submission.objects.filter(is_under_review=True).count()
 
     return render(
         request,
         'public/frontpage.html',
         {
             'submissions': submissions,
+            'raw_submissions': raw_submissions,
             'submission_votes': submission_votes,
-            'is_user_admin': is_user_admin
+            'is_user_admin': is_user_admin,
+            'current_user': request.user,
+            'reported_posts': reported_posts
         }
     )
 
@@ -138,23 +151,28 @@ def comments(request, thread_id=None):
             pass
 
         try:
-            user_thread_votes = Vote.objects.filter(id=reddit_user.id,
-                                                    submission=this_submission)
+            user_thread_votes = Vote.objects.filter(
+                id=reddit_user.id,
+                submission=this_submission
+            )
 
             for vote in user_thread_votes:
                 comment_votes[vote.vote_object.id] = vote.value
         except:  # noqa
             pass
 
-    return render(request, 'public/comments.html',
-                    {
-                        'submission': this_submission,
-                        'comments': thread_comments,
-                        'comment_votes': comment_votes,
-                        'sub_vote': sub_vote_value,
-                        'is_user_admin': is_user_admin
-                    }
-                )
+    return render(
+        request,
+        'public/comments.html',
+        {
+            'submission': this_submission,
+            'comments': thread_comments,
+            'comment_votes': comment_votes,
+            'sub_vote': sub_vote_value,
+            'current_user': request.user,
+            'is_user_admin': is_user_admin
+        }
+    )
 
 
 @post_only
@@ -257,6 +275,14 @@ def vote(request):
                            vote_value=new_vote_value)
         vote.save()
         vote_diff = new_vote_value
+
+    if vote_object_type == 'submission':
+        submission = get_object_or_404(Submission, id=vote_object_id)
+
+        if submission.score > 9 and submission.is_moderated is False:
+            submission.is_moderated = True
+            submission.save()
+
         return JsonResponse({'error': None,
                              'voteDiff': vote_diff})
 
@@ -299,7 +325,7 @@ def submit(request):
             )
             submission.save()
             messages.success(request, 'Submission created')
-            return redirect('/comments/{}'.format(submission.id))
+            return redirect('/')
 
     return render(request, 'public/submit.html', {'form': submission_form})
 
@@ -320,3 +346,77 @@ def delete_comment(request, object_id):
         request, 'Comment Deleted with ID : {0}'.format(object_id)
     )
     return redirect('/')
+
+
+@login_required
+def promote_submission(request, object_id):
+    submission = get_object_or_404(Submission, pk=object_id)
+    submission.is_under_review = False
+    submission.moderated = False
+    submission.save()
+    messages.success(
+        request,
+        'Submission with ID : {0} has been promoted.'.format(object_id)
+    )
+    return redirect('/')
+
+
+def report_submission(request, object_id):
+    if not request.user.is_authenticated:
+        return redirect('/sign_in/?next={}'.format(request.path))
+    else:
+        submission = get_object_or_404(Submission, pk=object_id)
+        if ReportSubmission.objects.filter(
+                reported_by=request.user,
+                submission=submission
+        ).exists():
+            messages.success(
+                request, 'This post has been reported.'.format(object_id)
+            )
+            return redirect('/')
+        report = ReportSubmission()
+        report.reported_by = request.user
+        report.submission = submission
+        report.save()
+        report_count = ReportSubmission.objects.filter(
+            submission=submission
+        ).count()
+        if report_count > 9:
+            submission.is_under_review = True
+            submission.save()
+        messages.success(
+            request,
+            'Submission with ID : {0} has been reported'.format(object_id)
+        )
+        return redirect('/')
+
+
+def page_body(request, submissions):
+    paginator = Paginator(submissions, 25)
+
+    page = request.GET.get('page', 1)
+    try:
+        submissions = paginator.page(page)
+    except PageNotAnInteger:
+        raise Http404
+    except EmptyPage:
+        submissions = paginator.page(paginator.num_pages)
+
+    submission_votes = {}
+
+    is_user_admin = False
+    if request.user.is_authenticated:
+        is_user_admin = CustomUser.objects.filter(
+            user=request.user,
+            admin=True
+        )
+        for submission in submissions:
+            try:
+                vote = Vote.objects.get(
+                    vote_object_type=submission.get_content_type(),
+                    vote_object_id=submission.id,
+                    user=KagisoUser.objects.get(id=request.user.id))
+                submission_votes[submission.id] = vote.value
+            except Vote.DoesNotExist:
+                pass
+    return submissions, submission_votes, is_user_admin

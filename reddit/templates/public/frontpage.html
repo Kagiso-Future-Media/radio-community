@@ -46,7 +46,9 @@
             <li>
               <a href="{{ submission.comments_url }}">{{ submission.comment_count }} comments</a>
               <br>
-              {% if is_user_admin %}
+              {% if submission.author == current_user %}
+                <p>{{ submission.author }}</p>
+                <p>{{ current_user }}</p>
                 <a href="submit/{{ submission.id }}/delete/" class="btn btn-danger info-container--delete-btn">
                   DELETE
                 </a>
