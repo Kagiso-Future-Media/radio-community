@@ -317,13 +317,6 @@ class Vote(models.Model):
         else:
             return None
 
-        if isinstance(self.vote_object, Submission):
-            pass
-            # self.vote_object.author.link_karma += vote_diff
-        else:
-            pass
-            # self.vote_object.author.comment_karma += vote_diff
-
         self.value = 0
         self.save()
         self.vote_object.save()
