@@ -88,6 +88,8 @@ class Submission(ContentTypeAware):
     score = models.IntegerField(default=0)
     timestamp = models.DateTimeField(default=timezone.now)
     comment_count = models.IntegerField(default=0)
+    is_moderated = models.BooleanField(default=False)
+    is_under_review = models.BooleanField(default=False)
 
     def generate_html(self):
         if self.text:
@@ -124,6 +126,9 @@ class Submission(ContentTypeAware):
             data.close()
         except FileNotFoundError:
             pass
+
+    def __str__(self):
+        return self.title
 
 
 class Comment(MttpContentTypeAware):
@@ -241,10 +246,10 @@ class Vote(models.Model):
 
         if isinstance(vote_object, Submission):
             submission = vote_object
-            vote_object.author.link_karma += vote_value
+            # vote_object.author.link_karma += vote_value
         else:
             submission = vote_object.submission
-            vote_object.author.comment_karma += vote_value
+            # vote_object.author.comment_karma += vote_value
 
         vote = cls(user=user,
                    vote_object=vote_object,
@@ -287,9 +292,11 @@ class Vote(models.Model):
             return None
 
         if isinstance(self.vote_object, Submission):
-            self.vote_object.author.link_karma += vote_diff
+            pass
+            # self.vote_object.author.link_karma += vote_diff
         else:
-            self.vote_object.author.comment_karma += vote_diff
+            pass
+            # self.vote_object.author.comment_karma += vote_diff
 
         self.value = new_vote_value
         self.vote_object.save()
@@ -310,16 +317,20 @@ class Vote(models.Model):
         else:
             return None
 
-        if isinstance(self.vote_object, Submission):
-            self.vote_object.author.link_karma += vote_diff
-        else:
-            self.vote_object.author.comment_karma += vote_diff
-
         self.value = 0
         self.save()
         self.vote_object.save()
         self.vote_object.author.save()
         return vote_diff
+
+
+class ReportSubmission(models.Model):
+    reported_by = models.ForeignKey(KagisoUser, on_delete=models.PROTECT)
+    submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.submission.title
 
 
 def create_image_url(instance):
@@ -397,19 +408,39 @@ def delete_local_images(compressed_image, original_image):
 
 @receiver(post_save, sender=Submission)
 def update_picture_file_url_submission(sender, instance, **kwargs):
-    create_image_url(instance)
-    compress_url, original_image, compressed_image = compress_image(instance)
-    if not instance.image_compress_url:
-        instance.image_compress_url = compress_url
-        instance.save()
-    delete_local_images(compressed_image, original_image)
+    if instance.image:
+        create_image_url(instance)
+        compress_url, original_image, compressed_image = compress_image(instance)   # noqa
+        if not instance.image_compress_url:
+            instance.image_compress_url = compress_url
+            instance.save()
+        delete_local_images(compressed_image, original_image)
 
 
 @receiver(post_save, sender=Comment)
 def update_picture_file_url_comment(sender, instance, **kwargs):
-    create_image_url(instance)
-    compress_url, original_image, compressed_image = compress_image(instance)
-    if not instance.image_compress_url:
-        instance.image_compress_url = compress_url
-        instance.save()
-    delete_local_images(compressed_image, original_image)
+    if instance.image:
+        create_image_url(instance)
+        compress_url, original_image, compressed_image = compress_image(instance)   # noqa
+        if not instance.image_compress_url:
+            instance.image_compress_url = compress_url
+            instance.save()
+        delete_local_images(compressed_image, original_image)
+
+
+def get_filtered_submissions():
+    return Submission \
+        .objects \
+        .order_by('-score') \
+        .all() \
+        .exclude(is_under_review=True) \
+        .exclude(is_moderated=False)
+
+
+def get_unfiltered_submissions():
+    return Submission \
+        .objects \
+        .order_by('-score') \
+        .all() \
+        .exclude(is_under_review=True) \
+        .exclude(is_moderated=True)

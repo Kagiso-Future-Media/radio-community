@@ -4,6 +4,7 @@ from kagiso_auth.models import KagisoUser
 from reddit.models import (
     Comment,
     CustomUser,
+    ReportSubmission,
     Submission,
     Vote
 )
@@ -82,8 +83,18 @@ class CustomUserAdmin(admin.ModelAdmin):
         return obj.user.id
 
 
+class ReportSubmissionAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'reported_by',
+        'submission',
+        'created_at'
+    )
+
+
 admin.site.register(Submission, SubmissionAdmin)
 admin.site.register(Comment)
+admin.site.register(ReportSubmission)
 admin.site.register(Vote)
 admin.site.register(KagisoUser, KagisoUserAdmin)
 admin.site.register(CustomUser, CustomUserAdmin)

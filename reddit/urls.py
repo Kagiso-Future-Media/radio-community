@@ -18,18 +18,26 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.frontpage, name='frontpage'),
+    url(r'^$', views.home_page, name='frontpage'),
     url(r'^comments/(?P<thread_id>[0-9]+)$', views.comments, name='thread'),
     url(r'^comments/submit/(?P<object_id>[0-9]+)/delete/$',
         views.delete_submission,
         name='delete_submission_comments'
+        ),
+    url(r'submit/(?P<object_id>[0-9]+)/report/$',
+        views.report_submission,
+        name='report_submission'
+        ),
+    url(r'submit/(?P<object_id>[0-9]+)/promote/$',
+        views.promote_submission,
+        name='promote_submission'
         ),
     url(r'^comments/comments/node/(?P<object_id>[0-9]+)/delete/$',
         views.delete_comment,
         name='delete_comment'
         ),
     url(r'^submit/$', views.submit, name='submit'),
-    url(r'^submit/(?P<object_id>[0-9]+)/delete/$',
+    url(r'submit/(?P<object_id>[0-9]+)/delete/$',
         views.delete_submission,
         name='delete_submission'
         ),
@@ -37,12 +45,12 @@ urlpatterns = [
     url(r'^vote/$', views.vote, name='vote'),
     url(
         r'^raw/$',
-        views.rawpage,
+        views.raw_page,
         name='raw'
     ),
     url(
         r'^review/$',
-        views.reviewpage,
+        views.review_page,
         name='review'
     )
 ]
