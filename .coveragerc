@@ -1,0 +1,19 @@
+[run]
+branch=true
+source=.
+omit=
+    manage.py
+    venv/*
+    */__init__.py
+    radio_community/*
+    */migrations/*
+    */tests/*
+    node_modules/*
+    */management/*
+    style_guide/*
+    */urls.py
+    */admin.py
+    */forms.py
+    */apps.py
+    */middleware.py
+    */utils/helpers.py
