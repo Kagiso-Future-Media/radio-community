@@ -1,5 +1,4 @@
 function vote(voteButton) {
-    console.log(voteButton);
     var csrftoken = getCookie('csrftoken');
 
     $.ajaxSetup({
