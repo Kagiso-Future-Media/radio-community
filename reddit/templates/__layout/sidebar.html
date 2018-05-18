@@ -36,7 +36,15 @@
       </a>
 
       <div class="article--meta">
-        <a href="submit/{{ submission.id }}/report/" aria-label="report button" class="btn btn-danger btn-report">Report</a>
+
+        <!-- ## fake check to see if user click report already! START -->
+        {% if user_reported %}
+          <a aria-label="report button disabled" class="btn btn-danger btn-report btn-report-disabled">Report</a>
+        {% else %}
+          <a href="submit/{{ submission.id }}/report/" aria-label="report button" class="btn btn-danger btn-report">Report</a>
+        {% endif %}
+        <!-- ## fake check to see if user click report already! END -->
+
         <a href="{{ submission.linked_url }}" class="article--meta-title">{{ submission.title }}</a>
         <small><i class="article--meta-source">({% if submission.linked_url %}{{ submission.linked_url }}{% endif %})</i></small>
         <h6 class="article--meta-info">

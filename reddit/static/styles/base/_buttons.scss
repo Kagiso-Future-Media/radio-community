@@ -27,6 +27,11 @@
   background-color: #ccc;
   border-color: #ccc;
   color: #fff;
+
+  &.btn-report-disabled {
+    pointer-events: none;
+    text-decoration: line-through;
+  }
 }
 
 .btn-group {
