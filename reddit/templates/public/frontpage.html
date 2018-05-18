@@ -29,11 +29,16 @@
           </div>
         </td>
         <td class="info-container">
-          {% if submission.image %}
-            <img src="{{ submission.image_compress_url }}" alt="{{ submission.title }}">
-          {% else %}
-            <img src="https://dummyimage.com/40x40/000/fff" alt="placeholder image">
-          {% endif %}
+
+          <!-- ## link to post comes here!! -->
+          <a href="#0">
+            {% if submission.image %}
+              <img src="{{ submission.image_compress_url }}" alt="{{ submission.title }}">
+            {% else %}
+              <img src="https://imgplaceholder.com/420x320/cccccc/757575/fa-image" alt="placeholder image">
+            {% endif %}
+          </a>
+
           <a class="thread-title" href="{{ submission.linked_url }}">{{ submission.title }}</a>
           <br>
           <i class="thread-info--url-source">({% if submission.linked_url %}{{ submission.linked_url }}{% endif %})</i>
