@@ -22,7 +22,7 @@ function vote(voteButton) {
 
     var doPost = $.post('/vote/', {
         what: $data.whatType,
-        what_id: $data.whatId,
+        what_id: $data.whatIs,
         vote_value: vote_value
     });
 

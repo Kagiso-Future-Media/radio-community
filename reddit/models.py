@@ -291,12 +291,10 @@ class Vote(models.Model):
         else:
             return None
 
-        if isinstance(self.vote_object, Submission):
-            pass
-            # self.vote_object.author.link_karma += vote_diff
-        else:
-            pass
-            # self.vote_object.author.comment_karma += vote_diff
+        # if isinstance(self.vote_object, Submission):
+        #     self.vote_object.author.link_karma += vote_diff
+        # else:
+        #     self.vote_object.author.comment_karma += vote_diff
 
         self.value = new_vote_value
         self.vote_object.save()
@@ -316,6 +314,11 @@ class Vote(models.Model):
             self.vote_object.score += 1
         else:
             return None
+
+        # if isinstance(self.vote_object, Submission):
+        #     self.vote_object.author.link_karma += vote_diff
+        # else:
+        #     self.vote_object.author.comment_karma += vote_diff
 
         self.value = 0
         self.save()

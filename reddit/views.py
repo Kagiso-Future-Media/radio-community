@@ -213,6 +213,7 @@ def post_comment(request):
 
 @post_only
 def vote(request):
+
     # The type of object we're voting on, can be 'submission' or 'comment'
     vote_object_type = request.POST.get('what', None)
 
@@ -235,13 +236,11 @@ def vote(request):
     try:  # If the vote value isn't an integer that's equal to -1 or 1
         # the request is bad and we can not continue.
         new_vote_value = int(new_vote_value)
-
         if new_vote_value not in [-1, 1]:
             raise ValueError('Wrong value for the vote!')
 
     except (ValueError, TypeError):
         return HttpResponseBadRequest()
-
     # if one of the objects is None, 0 or some other bool(value) == False value
     # or if the object type isn't 'comment' or 'submission' it's a bad request
     if not all([vote_object_type, vote_object_id, new_vote_value]) or \
@@ -332,18 +331,20 @@ def submit(request):
 
 def delete_submission(request, object_id):
     submission = get_object_or_404(Submission, pk=object_id)
+    title = submission.title
     submission.delete()
     messages.success(
-        request, 'Submission Deleted with ID : {0}'.format(object_id)
+        request, 'Submission "{}" has been deleted successfully.'.format(title)
     )
     return redirect('/')
 
 
 def delete_comment(request, object_id):
     node = get_object_or_404(Comment, pk=object_id)
+    title = node.title
     node.delete()
     messages.success(
-        request, 'Comment Deleted with ID : {0}'.format(object_id)
+        request, 'Comment {} has been deleted successfully.'.format(title)
     )
     return redirect('/')
 
@@ -356,7 +357,7 @@ def promote_submission(request, object_id):
     submission.save()
     messages.success(
         request,
-        'Submission with ID : {0} has been promoted.'.format(object_id)
+        'Submission "{0}" has been promoted.'.format(submission.title)
     )
     return redirect('/')
 
@@ -389,7 +390,9 @@ def report_submission(request, object_id):
             submission.save()
         messages.success(
             request,
-            'Submission with ID : {0} has been reported'.format(object_id)
+            'Submission by "{0}" has been reported'.format(
+                submission.author.email
+            )
         )
         return redirect('/')
 

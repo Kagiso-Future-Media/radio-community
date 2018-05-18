@@ -18,3 +18,5 @@ htmlcov/
 reddit/tests/__pycache__/
 users/__pycache__/
 users/tests/__pycache__/
+*.pyc
+*.pytest_cache/
