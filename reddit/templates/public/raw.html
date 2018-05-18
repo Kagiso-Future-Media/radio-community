@@ -23,11 +23,16 @@
           {% endwith %}
         </div>
       </div>
-      {% if submission.image %}
-        <img src="{{ submission.image_compress_url }}" alt="{{ submission.title }}" class="article--figure">
-      {% else %}
-        <img src="https://dummyimage.com/40x40/000/fff" alt="placeholder image" class="article--figure">
-      {% endif %}
+
+      <!-- ## link to post comes here!! -->
+      <a href="#0">
+        {% if submission.image %}
+          <img src="{{ submission.image_compress_url }}" alt="{{ submission.title }}" class="article--figure">
+        {% else %}
+          <img src="https://imgplaceholder.com/420x320/cccccc/757575/fa-image" alt="placeholder image" class="article--figure">
+        {% endif %}
+      </a>
+
       <div class="article--meta">
         <a href="submit/{{ submission.id }}/report/" aria-label="report button" class="btn btn-danger btn-report">Report</a>
         <a href="{{ submission.linked_url }}" class="article--meta-title">{{ submission.title }}</a>
