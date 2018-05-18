@@ -2,7 +2,7 @@ from .test import *  # noqa
 
 DEBUG = False
 
-SECRET_KEY = ''
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 DATABASES = {
     'default': {
