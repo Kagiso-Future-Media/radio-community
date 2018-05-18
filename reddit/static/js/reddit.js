@@ -171,6 +171,3 @@ $('a[name="replyButton"]').click(function () {
     }
 
 });
-
-
-
