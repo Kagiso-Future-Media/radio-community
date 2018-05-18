@@ -363,6 +363,9 @@ def promote_submission(request, object_id):
 
 def report_submission(request, object_id):
     if not request.user.is_authenticated:
+        messages.warning(
+            request, 'You need to be logged in to report a post.'
+        )
         return redirect('/sign_in/?next={}'.format(request.path))
     else:
         submission = get_object_or_404(Submission, pk=object_id)
