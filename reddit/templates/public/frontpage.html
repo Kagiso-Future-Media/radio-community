@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load humanize static %} 
+{% load humanize static %}
 
 {% block content %}
 
@@ -13,15 +13,15 @@
 <div class="split-layout clearfix">
   <table class="home-feed left-column">
     <tbody>
-      {% for submission in submissions %}
+      {% for submission in submissions.items %}
       <tr>
         <td>
-          <div class="vote" data-what-type="submission" data-what-id="{{ submission.id }}">
-            {% with vote_value=submission_votes|get_item:submission.id %}
+          <div class="vote" data-what-type="submission" data-what-id="{{ submission.submission.id }}">
+            {% with vote_value=submission_votes|get_item:submission.submission.id %}
             <div>
               <i class="fa fa-chevron-up {% if  vote_value == 1 %} upvoted {% endif %}" title="upvote" onclick="vote(this)"></i>
             </div>
-            <div class="score" title="score">{{ submission.score }}</div>
+            <div class="score" title="score">{{ submission.submission.score }}</div>
             <div>
               <i class="fa fa-chevron-down{% if  vote_value == -1 %} downvoted {% endif %}" title="downvote" onclick="vote(this)"></i>
             </div>
@@ -32,29 +32,29 @@
 
           <!-- ## link to post comes here!! -->
           <a href="#0">
-            {% if submission.image %}
-              <img src="{{ submission.image_compress_url }}" alt="{{ submission.title }}">
+            {% if submission.submission.image %}
+              <img src="{{ submission.submission.image_compress_url }}" alt="{{ submission.submission.title }}">
             {% else %}
               <img src="https://imgplaceholder.com/420x320/cccccc/757575/fa-image" alt="placeholder image">
             {% endif %}
           </a>
 
-          <a class="thread-title" href="{{ submission.linked_url }}">{{ submission.title }}</a>
+          <a class="thread-title" href="{{ submission.submission.linked_url }}">{{ submission.submission.title }}</a>
           <br>
-          <i class="thread-info--url-source">({% if submission.linked_url %}{{ submission.linked_url }}{% endif %})</i>
+          <i class="thread-info--url-source">({% if submission.submission.linked_url %}{{ submission.submission.linked_url }}{% endif %})</i>
           <br>
           <h6 class="thread-info">
-            submitted {{ submission.timestamp|naturaltime }} by
-            <a href="/user/{{ submission.author_name }}">{{ submission.author_name }}</a>        
+            submitted {{ submission.submission.timestamp|naturaltime }} by
+            <a href="/user/{{ submission.author_name }}">{{ submission.submission.author_name }}</a>
           </h6>
           <ul class="buttons">
             <li>
-              <a href="{{ submission.comments_url }}">{{ submission.comment_count }} comments</a>
+              <a href="{{ submission.comments_url }}">{{ submission.submission.comment_count }} comments</a>
               <br>
-              {% if submission.author == current_user %}
-                <p>{{ submission.author }}</p>
+              {% if submission.submission.author == current_user %}
+                <p>{{ submission.submission.author }}</p>
                 <p>{{ current_user }}</p>
-                <a href="submit/{{ submission.id }}/delete/" class="btn btn-danger info-container--delete-btn">
+                <a href="submit/{{ submission.submission.id }}/delete/" class="btn btn-danger info-container--delete-btn">
                   DELETE
                 </a>
               {% endif %}
