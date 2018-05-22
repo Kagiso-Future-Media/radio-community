@@ -90,12 +90,18 @@ def home_page(request):
     submissions, submission_votes, is_user_admin = page_body(request, all_submissions)   # noqa
     raw_submissions, submission_votes, is_user_admin = page_body(request, _raw_submissions)   # noqa
     reported_posts = Submission.objects.filter(is_under_review=True).count()
+    reported_submissions = ReportSubmission.objects.all()
+
+    print(submissions)
+    print('==================================')
+    print(raw_submissions)
 
     return render(
         request,
         'public/frontpage.html',
         {
             'submissions': submissions,
+            'reported_submissions': reported_submissions,
             'raw_submissions': raw_submissions,
             'submission_votes': submission_votes,
             'is_user_admin': is_user_admin,
@@ -371,10 +377,8 @@ def report_submission(request, object_id):
         return redirect('/sign_in/?next={}'.format(request.path))
     else:
         submission = get_object_or_404(Submission, pk=object_id)
-        if ReportSubmission.objects.filter(
-                reported_by=request.user,
-                submission=submission
-        ).exists():
+        user_reported = user_already_reported_submission(request, submission)
+        if user_reported:
             messages.warning(
                 request, 'This post has been reported.'.format(object_id)
             )
@@ -427,4 +431,25 @@ def page_body(request, submissions):
                 submission_votes[submission.id] = vote.value
             except Vote.DoesNotExist:
                 pass
-    return submissions, submission_votes, is_user_admin
+        new_submissions = get_user_reported_submissions(request, submissions)
+    return new_submissions, submission_votes, is_user_admin
+
+
+def user_already_reported_submission(request, submission):
+    return ReportSubmission.objects.filter(
+        reported_by=request.user,
+        submission=submission
+    ).exists()
+
+
+def get_user_reported_submissions(request, all_submissions):
+    reported_submissions = []
+
+    for submission in all_submissions:
+        temp_submissions = {}
+        temp_submissions['submission'] = submission
+        reported = user_already_reported_submission(request, submission)
+        temp_submissions['user_reported'] = reported
+        reported_submissions.append(temp_submissions)
+
+    return reported_submissions
