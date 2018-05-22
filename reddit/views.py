@@ -92,10 +92,6 @@ def home_page(request):
     reported_posts = Submission.objects.filter(is_under_review=True).count()
     reported_submissions = ReportSubmission.objects.all()
 
-    print(submissions)
-    print('==================================')
-    print(raw_submissions)
-
     return render(
         request,
         'public/frontpage.html',
