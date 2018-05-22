@@ -86,9 +86,9 @@ def home_page(request):
     # TODO: Serve user votes on submissions too.
 
     all_submissions = get_filtered_submissions()
-    raw_submissions = get_unfiltered_submissions()
+    _raw_submissions = get_unfiltered_submissions()
     submissions, submission_votes, is_user_admin = page_body(request, all_submissions)   # noqa
-    raw_submissions, submission_votes, is_user_admin = page_body(request, raw_submissions)   # noqa
+    raw_submissions, submission_votes, is_user_admin = page_body(request, _raw_submissions)   # noqa
     reported_posts = Submission.objects.filter(is_under_review=True).count()
 
     return render(
@@ -100,7 +100,8 @@ def home_page(request):
             'submission_votes': submission_votes,
             'is_user_admin': is_user_admin,
             'current_user': request.user,
-            'reported_posts': reported_posts
+            'reported_posts': reported_posts,
+            'raw_post_count': _raw_submissions.count
         }
     )
 
@@ -374,7 +375,7 @@ def report_submission(request, object_id):
                 reported_by=request.user,
                 submission=submission
         ).exists():
-            messages.success(
+            messages.warning(
                 request, 'This post has been reported.'.format(object_id)
             )
             return redirect('/')
@@ -390,8 +391,9 @@ def report_submission(request, object_id):
             submission.save()
         messages.success(
             request,
-            'Submission by "{0}" has been reported'.format(
-                submission.author.email
+            'Submission by "{0} {1}" has been reported'.format(
+                submission.author.first_name,
+                submission.author.last_name
             )
         )
         return redirect('/')
