@@ -427,7 +427,7 @@ def page_body(request, submissions):
                 submission_votes[submission.id] = vote.value
             except Vote.DoesNotExist:
                 pass
-        new_submissions = get_user_reported_submissions(request, submissions)
+    new_submissions = get_user_reported_submissions(request, submissions)
     return new_submissions, submission_votes, is_user_admin
 
 
