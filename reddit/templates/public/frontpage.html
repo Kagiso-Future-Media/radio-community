@@ -31,9 +31,9 @@
         <td class="info-container">
 
           <!-- ## link to post comes here!! -->
-          <a href="#0">
+          <a href="#0" class="article--figure--link">
             {% if submission.image %}
-              <img src="{{ submission.image_compress_url }}" alt="{{ submission.title }}">
+              <img src="{{ submission.image_compress_url }}" alt="{{ submission.title }}" class="article--figure">
             {% else %}
               <img src="{% static 'img/thumb_placeholder.gif' %}" alt="placeholder image" class="article--figure">
             {% endif %}
