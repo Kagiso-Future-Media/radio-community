@@ -31,7 +31,7 @@
         <td class="info-container">
 
           <!-- ## link to post comes here!! -->
-          <a href="#0">
+          <a href="/comments/{{ submission.submission.id }}">
             {% if submission.submission.image %}
               <img src="{{ submission.submission.image_compress_url }}" alt="{{ submission.submission.title }}">
             {% else %}
@@ -52,8 +52,6 @@
               <a href="{{ submission.comments_url }}">{{ submission.submission.comment_count }} comments</a>
               <br>
               {% if submission.submission.author == current_user %}
-                <p>{{ submission.submission.author }}</p>
-                <p>{{ current_user }}</p>
                 <a href="submit/{{ submission.submission.id }}/delete/" class="btn btn-danger info-container--delete-btn">
                   DELETE
                 </a>

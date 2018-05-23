@@ -26,7 +26,7 @@
       </div>
 
       <!-- ## link to post comes here!! -->
-      <a href="#0">
+      <a href="/comments/{{ submission.submission.id }}">
         {% if submission.submission.image %}
           <img src="{{ submission.submission.image_compress_url }}" alt="{{ submission.submission.title }}" class="article--figure">
         {% else %}
@@ -50,8 +50,18 @@
           submitted {{ submission.submission.timestamp|naturaltime }} by
           <a href="#0">{{ submission.submission.author_name }}</a>
         </h6>
-        <a href="#0" class="article--meta-comments">{{ submission.submission.comment_count }} comments</a>
+        <ul class="buttons">
+            <li>
+              <a href="#0" class="article--meta-comments">{{ submission.submission.comment_count }} comments</a>
+              <br />
+              {% if submission.submission.author == current_user %}
+                <a href="submit/{{ submission.submission.id }}/delete/" class="btn btn-danger info-container--delete-btn">
+                  DELETE
+                </a>
+              {% endif %}
         <!-- <button type="button" role="delete" class="btn btn-danger info-container--delete-btn">Report</button> -->
+          </li>
+          </ul>
       </div>
     </article>
   {% endfor %}

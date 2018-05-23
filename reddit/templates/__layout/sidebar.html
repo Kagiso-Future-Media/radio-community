@@ -27,7 +27,7 @@
       </div>
 
       <!-- ## link to post comes here!! -->
-      <a href="#0">
+      <a href="/comments/{{ submission.submission.id }}">
         {% if submission.submission.image %}
           <img src="{{ submission.submission.image_compress_url }}" alt="{{ submission.submission.title }}" class="article--figure">
         {% else %}
