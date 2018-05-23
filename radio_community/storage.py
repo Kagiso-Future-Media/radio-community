@@ -12,7 +12,7 @@ class CachedS3BotoStorage(S3BotoStorage):
         self.local_storage = get_storage_class(
             "compressor.storage.CompressorFileStorage")()
 
-    def save(self, name, content):
+    def save(self, name, content, max_length=None):
         self.local_storage._save(name, content)
         super(CachedS3BotoStorage, self).save(name,
                                               self.local_storage._open(name))

@@ -339,8 +339,9 @@ class ReportSubmission(models.Model):
 def create_image_url(instance):
     if not instance.image_url:
         s3_domain = 's3.amazonaws.com'
-        s3_key = instance.image.file.obj.key
-        s3_bucket_name = instance.image.file.obj.bucket_name
+        s3_key = instance.image.file.key
+        s3_key = s3_key.key
+        s3_bucket_name = instance.image.storage.bucket_name
         s3_full_file_url = 'https://{0}.{1}/{2}'.format(
             s3_bucket_name, s3_domain, s3_key
         )
