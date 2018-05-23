@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load humanize static %} 
+{% load humanize static %}
 
 {% block content %}
 
@@ -8,15 +8,16 @@
     <h2>HOT/RAW Section</h2>
     <small>Pull in RAW posts ONLY!</small>
   </div>
-  {% for submission in submissions %}
+
+  {% for submission  in submissions %}
     <article class="article clearfix is--not-full-width">
       <div class="article-vote">
-        <div class="vote" data-what-type="submission" data-what-id="{{ submission.id }}">
-          {% with vote_value=submission_votes|get_item:submission.id %}
+        <div class="vote" data-what-type="submission" data-what-id="{{ submission.submission.id }}">
+          {% with vote_value=submission_votes|get_item:submission.submission.id %}
           <div>
             <i class="fa fa-chevron-up" title="upvote" onclick="vote(this)"></i>
           </div>
-          <div class="score" title="score">{{ submission.score }}</div>
+          <div class="score" title="score">{{ submission.submission.score }}</div>
           <div>
             <i class="fa fa-chevron-down" title="downvote" onclick="vote(this)"></i>
           </div>
@@ -26,8 +27,8 @@
 
       <!-- ## link to post comes here!! -->
       <a href="#0">
-        {% if submission.image %}
-          <img src="{{ submission.image_compress_url }}" alt="{{ submission.title }}" class="article--figure">
+        {% if submission.submission.image %}
+          <img src="{{ submission.submission.image_compress_url }}" alt="{{ submission.submission.title }}" class="article--figure">
         {% else %}
           <img src="https://imgplaceholder.com/420x320/cccccc/757575/fa-image" alt="placeholder image" class="article--figure">
         {% endif %}
@@ -35,21 +36,21 @@
 
       <div class="article--meta">
 
-        <!-- ## fake check to see if user click report already! START -->
-        {% if user_reported %}
+         ## fake check to see if user click report already! START
+        {% if submission.user_reported %}
           <a aria-label="report button disabled" class="btn btn-danger btn-report btn-report-disabled">Report</a>
         {% else %}
-          <a href="submit/{{ submission.id }}/report/" aria-label="report button" class="btn btn-danger btn-report">Report</a>
+          <a href="submit/{{ submission.submission.id }}/report/" aria-label="report button" class="btn btn-danger btn-report">Report</a>
         {% endif %}
         <!-- ## fake check to see if user click report already! END -->
-        
-        <a href="{{ submission.linked_url }}" class="article--meta-title">{{ submission.title }}</a>
-        <small><i class="article--meta-source">({% if submission.linked_url %}{{ submission.linked_url }}{% endif %})</i></small>
+
+        <a href="{{ submission.submission.linked_url }}" class="article--meta-title">{{ submission.submission.title }}</a>
+        <small><i class="article--meta-source">({% if submission.submission.linked_url %}{{ submission.submission.linked_url }}{% endif %})</i></small>
         <h6 class="article--meta-info">
-          submitted {{ submission.timestamp|naturaltime }} by
-          <a href="#0">{{ submission.author_name }}</a>
+          submitted {{ submission.submission.timestamp|naturaltime }} by
+          <a href="#0">{{ submission.submission.author_name }}</a>
         </h6>
-        <a href="#0" class="article--meta-comments">{{ submission.comment_count }} comments</a>
+        <a href="#0" class="article--meta-comments">{{ submission.submission.comment_count }} comments</a>
         <!-- <button type="button" role="delete" class="btn btn-danger info-container--delete-btn">Report</button> -->
       </div>
     </article>
