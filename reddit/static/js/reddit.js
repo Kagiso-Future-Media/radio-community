@@ -74,9 +74,22 @@ function vote(voteButton) {
         }
     })
 
-    // doPost.fail((err) => {
-    //     if (err.status === 403) alert('You need to be logged in to upvote and downvote');
-    // });
+    const $mainContentContainer = $('.main-content');
+    const signInAlert = `
+        <div class="alert alert-danger alert-dismissible fade in clearfix" role="alert" style="margin: 0 0 20px">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <p style="display: inline-block; margin: 7px 0 0">You need to be logged in to upvote and downvote</p>
+            <a href="/sign_in/" class="btn btn-default" style="float: right">Sign In</a>
+        </div>
+    `;    
+
+    doPost.fail((err) => {
+        if (err.status === 403 && err.statusText === 'Forbidden') {
+            $mainContentContainer.prepend(signInAlert);
+        }
+    });
 }
 
 function getCookie(name) {
