@@ -29,7 +29,7 @@
         {% if submission.image %}
           <img src="{{ submission.image_compress_url }}" alt="{{ submission.title }}" class="article--figure">
         {% else %}
-          <img src="https://imgplaceholder.com/420x320/cccccc/757575/fa-image" alt="placeholder image" class="article--figure">
+          <img src="{% static 'img/thumb_placeholder.gif' %}" alt="placeholder image" class="article--figure">
         {% endif %}
       </a>
 
