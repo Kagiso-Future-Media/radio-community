@@ -72,7 +72,11 @@ function vote(voteButton) {
             var scoreInt = parseInt($score.text());
             $score.text(scoreInt += voteDiff);
         }
-    });
+    })
+
+    // doPost.fail((err) => {
+    //     if (err.status === 403) alert('You need to be logged in to upvote and downvote');
+    // });
 }
 
 function getCookie(name) {
