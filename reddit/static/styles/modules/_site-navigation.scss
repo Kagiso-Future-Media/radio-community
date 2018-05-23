@@ -6,6 +6,7 @@
   padding: 20px;
 }
 
+// scss-lint:disable NestingDepth
 .navbar-right {
   .dropdown-menu {
     @media (min-width: 768px) {
@@ -21,10 +22,15 @@
 
       > a {
         color: #fff;
+
+        &:hover {
+          background-color: #4e034f;
+        }
       }
     }
   }
 }
+// scss-lint:enable NestingDepth
 
 .navbar-inverse {
   .navbar-brand {
