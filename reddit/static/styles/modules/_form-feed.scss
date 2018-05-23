@@ -5,7 +5,11 @@
 .info-container {
   padding: 12px 0;
 
-  > img {
+  .article--figure--link {
+    margin: 0 0 10px;
+  }
+
+  .article--figure {
     margin: 0 14px 20px 0;
     width: 90%;
 
@@ -18,7 +22,7 @@
 
     @media (min-width: 1024px) {
       margin: 0 20px 30px 0;
-      width: 15%;
+      width: 25%;
     }
   }
 }
