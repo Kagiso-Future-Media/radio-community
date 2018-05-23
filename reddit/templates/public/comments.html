@@ -3,13 +3,34 @@
 
 {% block content %}
     {# Submission block #}
+
+    <!-- ## Delete Popup Confirmation Modal ## -->
+    <div class="modal fade delete-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">You are about to delete a post</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure this is the desired action? This will completely remove the post</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    <!-- <button type="button" class="btn btn-danger" id="js--cancel-submission">Yes</button> -->
+                    <a href="submit/{{ submission.id }}/delete/" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="split-layout clearfix">
         <div class="left-column">
             <div class="comments-main-figure">
                 {% if submission.image %}
                     <img src="{{ submission.image_compress_url }}" alt="{{ submission.title }}">
                 {% else %}
-                    <img src="https://dummyimage.com/40x40/000/fff" alt="placeholder image">
+                    <img src="{% static 'img/thumb_placeholder.gif' %}" alt="placeholder image">
                 {% endif %}
             </div>
 
@@ -34,9 +55,8 @@
                         <i class="thread-info--url-source">({% if submission.linked_url %}{{ submission.linked_url }}{% endif %})</i>
                         <br>
                         {% if current_user == submission.author or is_user_admin %}
-                            <a href="submit/{{ submission.id }}/delete/" class="btn btn-danger reply-container--delete-btn">
-                                DELETE
-                            </a>
+                            <!-- <a href="submit/{{ submission.id }}/delete/" class="btn btn-danger reply-container--delete-btn">DELETE</a> -->
+                            <button type="button" class="btn btn-danger reply-container--delete-btn" data-toggle="modal" data-target=".delete-modal">Delete</button>
                         {% endif %}
                         <br>
                         <h6 class="thread-info">submitted {{ submission.timestamp|naturaltime }} by <a

@@ -1,14 +1,53 @@
 {% extends 'base.html' %}
-{% load humanize static %} 
+{% load humanize static %}
 
 {% block content %}
 
   <!-- TODO: Pull in all posts reported! -->
   <div class="page-title">
-    <h2>Review Section</h2>
-    <small>Pull in all reported posts ONLY!</small>
+    <h2>All Posts Under Review</h2>
+    <!-- <small>Pull in all reported posts ONLY!</small> -->
   </div>
   {% for submission in submissions %}
+
+  <!-- ## Delete Popup Confirmation Modal ## -->
+  <div class="modal fade delete-post-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">You are about to delete a post</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure this is the desired action? This will completely remove the post</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                <a href="submit/{{ submission.id }}/delete/" class="btn btn-danger">Delete Post</a>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <!-- ## Promote Popup Confirmation Modal ## -->
+  <div class="modal fade promote-post-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">You are about to promote a post</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure this is the desired action?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                <a href="submit/{{ submission.id }}/promote/" class="btn btn-success">Promote Post</a>
+            </div>
+        </div>
+    </div>
+  </div>
+
   <article class="article clearfix is--not-full-width">
     <div class="article-vote">
       <div class="vote" data-what-type="submission" data-what-id="{{ submission.id }}">
@@ -28,7 +67,7 @@
       {% if submission.image %}
         <img src="{{ submission.image_compress_url }}" alt="{{ submission.title }}">
       {% else %}
-        <img src="https://imgplaceholder.com/420x320/cccccc/757575/fa-image" alt="placeholder image">
+        <img src="{% static 'img/thumb_placeholder.gif' %}" alt="placeholder image" class="article--figure">
       {% endif %}
     </a>
     <div class="article--meta">
@@ -42,8 +81,10 @@
       <a href="#0" class="article--meta-comments">{{ submission.comment_count }} comments</a>
       <!-- <button type="button" role="delete" class="btn btn-danger info-container--delete-btn">Delete</button> -->
       <div class="btn-group btn-group-sm" role="group">
-        <a href="submit/{{ submission.id }}/delete/" class="btn btn-danger">Delete Post</a>
-        <a href="submit/{{ submission.id }}/promote/" class="btn btn-success">Promote Post</a>
+        <!-- <a href="submit/{{ submission.id }}/delete/" class="btn btn-danger">Delete Post</a> -->
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target=".delete-post-modal">Delete Post</button>
+        <!-- <a href="submit/{{ submission.id }}/promote/" class="btn btn-success">Promote Post</a> -->
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target=".promote-post-modal">Promote Post</button>
       </div>
     </div>
   </article>
