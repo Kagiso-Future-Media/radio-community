@@ -10,7 +10,7 @@
     <h3 class="side-bar--title">Raw</h3>
     <h4 class="side-bar--sub-title">{{ raw_post_count }} Reviews</h4>
   </header>
-  {% for submission  in raw_submissions %}
+  {% for submission  in raw_submissions|slice:"10" %}
     <article class="article clearfix">
       <div class="article-vote">
         <div class="vote" data-what-type="submission" data-what-is="{{ submission.submission.id }}">

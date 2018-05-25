@@ -5,7 +5,7 @@
 
 <a href="{% url 'submit' %}" class="navbar--submit">
   <span class="submit--add">
-    <img src="{% static "img/icon_add.svg" %}" alt="add post icon" class="submit--add-icon">
+    <img src="{% static 'img/icon_add.svg' %}" alt="add post icon" class="submit--add-icon">
   </span>
   Add Post
 </a>
@@ -13,10 +13,10 @@
 <div class="split-layout clearfix">
   <table class="home-feed left-column">
     <tbody>
-      {% for submission in submissions.items %}
+      {% for submission in submissions %}
       <tr>
         <td>
-          <div class="vote" data-what-type="submission" data-what-id="{{ submission.submission.id }}">
+          <div class="vote" data-what-type="submission" data-what-is="{{ submission.submission.id }}">
             {% with vote_value=submission_votes|get_item:submission.submission.id %}
             <div>
               <i class="fa fa-chevron-up {% if  vote_value == 1 %} upvoted {% endif %}" title="upvote" onclick="vote(this)"></i>
@@ -51,7 +51,7 @@
             <li>
               <a href="{{ submission.comments_url }}">{{ submission.submission.comment_count }} comments</a>
               <br>
-              {% if submission.submission.author == current_user %}
+              {% if is_user_admin or submission.submission.author == current_user %}
                 <a href="submit/{{ submission.submission.id }}/delete/" class="btn btn-danger info-container--delete-btn">
                   DELETE
                 </a>

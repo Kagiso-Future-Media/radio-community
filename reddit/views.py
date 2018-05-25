@@ -50,7 +50,8 @@ def raw_page(request):
         {
             'submissions': submissions,
             'submission_votes': submission_votes,
-            'current_user': request.user
+            'current_user': request.user,
+            'is_user_admin': is_user_admin
         }
     )
 
@@ -400,15 +401,6 @@ def report_submission(request, object_id):
 
 
 def page_body(request, submissions):
-    paginator = Paginator(submissions, 25)
-
-    page = request.GET.get('page', 1)
-    try:
-        submissions = paginator.page(page)
-    except PageNotAnInteger:
-        raise Http404
-    except EmptyPage:
-        submissions = paginator.page(paginator.num_pages)
 
     submission_votes = {}
 
@@ -417,7 +409,7 @@ def page_body(request, submissions):
         is_user_admin = CustomUser.objects.filter(
             user=request.user,
             admin=True
-        )
+        ).exists()
         for submission in submissions:
             try:
                 vote = Vote.objects.get(
@@ -432,6 +424,8 @@ def page_body(request, submissions):
 
 
 def user_already_reported_submission(request, submission):
+    if not request.user.is_authenticated:
+        return False
     return ReportSubmission.objects.filter(
         reported_by=request.user,
         submission=submission
@@ -448,4 +442,14 @@ def get_user_reported_submissions(request, all_submissions):
         temp_submissions['user_reported'] = reported
         reported_submissions.append(temp_submissions)
 
-    return reported_submissions
+    paginator = Paginator(reported_submissions, 15)
+
+    page = request.GET.get('page', 1)
+    try:
+        new_submissions = paginator.page(page)
+    except PageNotAnInteger:
+        raise Http404
+    except EmptyPage:
+        new_submissions = paginator.page(paginator.num_pages)
+
+    return new_submissions
